@@ -36,8 +36,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     adapter: PrismaAdapter(db),
     providers: [
         Google({
-            clientId: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            // clientId: process.env.GOOGLE_CLIENT_ID,
+            // clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            allowDangerousEmailAccountLinking: true,
             profile(profile) {
                 return {
                     id: profile.id,
@@ -107,6 +108,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             return true
         },
         async signIn({ user, account }) {
+            console.log("account?.provider: ", account?.provider);
+
             if (account?.provider !== "credentials") return true
             if (user && user.id) {
                 const existingUser = await getUserById(user.id)
