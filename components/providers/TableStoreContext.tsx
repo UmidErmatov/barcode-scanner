@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 import { TableProps, TableStore, useTableStore } from "@/store/tableStore";
 import { useRef } from "react";

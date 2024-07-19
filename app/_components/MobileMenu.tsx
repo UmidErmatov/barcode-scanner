@@ -23,6 +23,7 @@ function MobileMenu({ }: Props) {
             {menuItems.map(item => {
                 return (
                     <Link
+                        key={item.link}
                         href={item.link}
                         className={cn("flex items-center gap-4 px-2.5",
                             item.link === pathname ? "text-foreground" : "text-muted-foreground hover:text-foreground"
