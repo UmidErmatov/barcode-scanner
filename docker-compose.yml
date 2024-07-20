@@ -1,8 +1,8 @@
 version: "3"
 
 services:
-  apteka-app:
-    container_name: apteka-app
+  scanner-app:
+    container_name: scanner-app
     build:
       context: .
       dockerfile: Dockerfile
