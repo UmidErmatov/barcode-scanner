@@ -102,13 +102,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             }
 
             if (!isLoggedIn && !isPublicRoute) {
-                return Response.redirect(new URL("/login", nextUrl))
+                let callbackUrl = nextUrl.pathname
+                if (nextUrl.search) {
+                    callbackUrl += nextUrl.search
+                }
+
+                const encodedCallbackUrl = encodeURIComponent(callbackUrl)
+                return Response.redirect(new URL(`/login?callbackUrl=${encodedCallbackUrl}`, nextUrl))
             }
 
             return true
         },
         async signIn({ user, account }) {
-            console.log("account?.provider: ", account?.provider);
 
             if (account?.provider !== "credentials") return true
             if (user && user.id) {

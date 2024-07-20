@@ -9,6 +9,8 @@ const transport = nodemailer.createTransport({
     }
 } as SMTPTransport.Options)
 
+const domain = process.env.NODE_ENV !== 'production' ? "http://localhost:3000" : process.env.AUTH_URL
+
 export const sendTwoFactorEmail = async (email: string, token: string) => {
 
     try {
@@ -24,7 +26,7 @@ export const sendTwoFactorEmail = async (email: string, token: string) => {
     }
 }
 export const sendResetPasswordEmail = async (email: string, token: string) => {
-    const resetLink = `http://192.168.0.199:3000/new-password?token=${token}`;
+    const resetLink = `${domain}/new-password?token=${token}`;
 
     try {
         await transport.sendMail({
@@ -40,7 +42,7 @@ export const sendResetPasswordEmail = async (email: string, token: string) => {
 }
 
 export const sendVerificationEmail = async (email: string, token: string) => {
-    const confirmLink = `http://192.168.0.199:3000/new-verification?token=${token}`;
+    const confirmLink = `${domain}/new-verification?token=${token}`;
 
     try {
         await transport.sendMail({

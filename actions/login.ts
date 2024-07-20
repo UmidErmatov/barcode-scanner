@@ -9,8 +9,9 @@ import * as z from 'zod'
 import { getTwoFactorTokenByEmail } from '@/data/two-factor-token';
 import { db } from '@/lib/db';
 import { getTwoFactorConfirmationByUserId } from '@/data/two-factor-confirmation';
+import { DEFAULT_LOGIN_REDIRECT } from '@/routes';
 
-export const loginAction = async (values: z.infer<typeof LoginSchema>) => {
+export const loginAction = async (values: z.infer<typeof LoginSchema>, callbackUrl?: string | null) => {
     const validatedFields = LoginSchema.safeParse(values)
     if (!validatedFields.success) {
         return { error: "Noto'g'ri ma'lumotlar!" }
@@ -60,7 +61,7 @@ export const loginAction = async (values: z.infer<typeof LoginSchema>) => {
         await signIn("credentials", {
             email,
             password,
-            redirectTo: "/"
+            redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT
         })
     } catch (error) {
         if (error instanceof AuthError) {

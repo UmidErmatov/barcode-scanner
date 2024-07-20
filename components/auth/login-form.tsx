@@ -18,6 +18,7 @@ type Props = {}
 
 function LoginForm({ }: Props) {
     const searchParams = useSearchParams()
+    const callbackUrl = searchParams.get('callbackUrl')
     const urlError = searchParams.get("error") === "OAuthAccountNotLinked" ? "Ushbu email avval ishlatilgan!" : ""
     const [showTwoFactor, setShowTwoFactor] = useState(false)
     const [error, setError] = useState<any>("")
@@ -35,7 +36,7 @@ function LoginForm({ }: Props) {
         setError("")
         setSuccess("")
         startTransition(() => {
-            loginAction(values)
+            loginAction(values, callbackUrl)
                 .then((data) => {
                     if (data?.error) {
                         setError(data?.error)
