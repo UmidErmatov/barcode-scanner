@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+  apteka-app:
+    container_name: apteka-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        AUTH_SECRET: ${AUTH_SECRET}
+        AUTH_URL: ${AUTH_URL}
+        AUTH_GOOGLE_ID: ${AUTH_GOOGLE_ID}
+        AUTH_GOOGLE_SECRET: ${AUTH_GOOGLE_SECRET}
+        FROM_EMAIL: ${FROM_EMAIL}
+        FROM_EMAIL_PASS: ${FROM_EMAIL_PASS}
+        DATABASE_URL: ${DATABASE_URL}
+    restart: always
+    ports:
+      - 9080:9080
+    networks:
+      - ease_server_default
+
+networks:
+  ease_server_default:
+    external: true

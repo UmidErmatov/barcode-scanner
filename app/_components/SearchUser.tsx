@@ -19,14 +19,14 @@ import { useState, useTransition } from "react"
 import { addUserToSourceAction, removeUserFromSourceAction, searchUserAction } from "@/actions/searUser"
 import { useTableContext } from "@/hooks/store-hooks/table-hook"
 import { UserMinus, UserPlus } from "lucide-react"
+import { useToast } from "@/components/ui/use-toast"
 
 export function SearchUser() {
+    const { toast } = useToast()
     const [open, setOpen] = useState(false)
     const excelData = useTableContext(state => state.excelData)
     const [isPending, startTransition] = useTransition()
     const [userData, setUserData] = useState<any[]>(excelData ? (excelData as any).users.map((user: any) => ({ ...user, added: true })) : [])
-    console.log("excelData: ", excelData);
-    console.log("userData: ", userData);
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
@@ -76,7 +76,7 @@ export function SearchUser() {
                                             className="ml-auto"
                                             disabled={isPending}
                                             onClick={() => {
-                                                if (excelData)
+                                                if (excelData) {
                                                     startTransition(() => {
                                                         if (user.added) {
                                                             removeUserFromSourceAction(user.id, excelData.id)
@@ -91,6 +91,11 @@ export function SearchUser() {
                                                         }
 
                                                     })
+                                                } else {
+                                                    toast({
+                                                        description: "Excel file yuklang",
+                                                    })
+                                                }
                                             }}
                                         >
                                             {user.added ? <UserMinus className="h-4 w-4" /> : <UserPlus className="h-4 w-4" />}

@@ -37,6 +37,7 @@ import { useTableContext } from "@/hooks/store-hooks/table-hook"
 import { deleteScannedDataAction } from "@/actions/sannedData"
 import { sourceDataAction } from "@/actions/sourceData"
 import { SearchUser } from "./SearchUser"
+import ExportToExcel from "./ExportToExcel"
 
 type Props = {
     // sourceData: SourceData | null,
@@ -107,14 +108,7 @@ function InitialTable({ }: Props) {
                         accept=".xlsx, .xls"
                         onChange={handleFileChange}
                     />
-                    {tabContent === "current" && <Button
-                        size="sm"
-                        variant="outline"
-                        className="h-7 gap-1 text-sm"
-                    >
-                        <FileUp className="h-3.5 w-3.5" />
-                        <span className="sr-only sm:not-sr-only">Export</span>
-                    </Button>}
+                    {tabContent === "current" && <ExportToExcel />}
                     {tabContent === "source" && <Button
                         size="sm"
                         variant="outline"
@@ -144,7 +138,28 @@ function InitialTable({ }: Props) {
                                         </TableHead>
                                     })}
                                 </TableRow>
-                            </TableHeader> : undefined}
+                            </TableHeader> : <TableHeader className="sticky w-full top-0 dark:bg-slate-800 bg-slate-100">
+                                <TableRow>
+                                    <TableHead>
+                                        Barcode
+                                    </TableHead>
+                                    <TableHead>
+                                        Nomi
+                                    </TableHead>
+                                    <TableHead>
+                                        Miqdori
+                                    </TableHead>
+                                    <TableHead>
+                                        Muddati
+                                    </TableHead>
+                                    <TableHead>
+                                        Ishlab chiqaruvchi
+                                    </TableHead>
+                                    <TableHead>
+                                        Tan narxi
+                                    </TableHead>
+                                </TableRow>
+                            </TableHeader>}
                             <TableBody>
                                 {tableData.length ? <>{tableData.map((product, index) => (
                                     <TableRow key={product?.Barcode + index || index}>
@@ -158,7 +173,7 @@ function InitialTable({ }: Props) {
                                 ))}</> : (
                                     <TableRow>
                                         <TableCell
-                                            colSpan={4}
+                                            colSpan={6}
                                             className="h-24 text-center"
                                         >
                                             Excel fayl yuklang

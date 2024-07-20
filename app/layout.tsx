@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { auth } from "@/auth";
 import { SessionProvider } from "next-auth/react";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,6 +32,7 @@ export default async function RootLayout({
           >
             <TooltipProvider>
               {children}
+              <Toaster />
             </TooltipProvider>
           </ThemeProvider>
         </body>

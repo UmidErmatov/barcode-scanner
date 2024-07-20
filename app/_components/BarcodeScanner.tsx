@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 import { useCommonStore } from '@/store/common';
 import { Html5Qrcode, Html5QrcodeCameraScanConfig } from 'html5-qrcode';
@@ -7,6 +8,7 @@ import BarcodeDataForm from './BarcodeDataForm';
 import { cn } from '@/lib/utils';
 import { DefaultBarcodeData } from '@/types/excelTypes';
 import { useTableContext } from '@/hooks/store-hooks/table-hook';
+import { parse } from 'date-fns';
 
 type Props = {}
 
@@ -49,12 +51,13 @@ function BarcodeScanner({ }: Props) {
         }
 
         const qrCodeSuccess = (result: string) => {
-
-            const findProduct = tableData.find(excelProduct => excelProduct.Barcode.split(",").includes(result))
+            const findProduct = tableData.find(excelProduct => excelProduct.Barcode.toString().split(",").includes(result))
 
             qrScannerStop()
             setScanModalHeader("Ma'lumotlar")
-            setQrResult(findProduct ? { barcode: findProduct.Barcode, name: findProduct.Nomi, quantity: findProduct.Miqdori, shelfLife: findProduct.Muddati as any, manufacturer: findProduct['Ishlab chiqaruvchi'], buyPrice: findProduct['Tan narxi'] } : { ...defaultBarcodeData, barcode: result })
+            console.log("findProduct.Muddati: ", parse(findProduct.Muddati, "dd.MM.yyyy", new Date()));
+
+            setQrResult(findProduct ? { barcode: findProduct.Barcode.toString(), name: findProduct.Nomi, quantity: +findProduct.Miqdori, shelfLife: parse(findProduct.Muddati, "dd.MM.yyyy", new Date()), manufacturer: findProduct['Ishlab chiqaruvchi'], buyPrice: findProduct['Tan narxi'] } : { ...defaultBarcodeData, barcode: result })
         }
 
         if (openScannerModal) {
