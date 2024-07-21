@@ -19,6 +19,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 RUN npx prisma generate
+RUN npx prisma db push
 RUN npm run build
 
 FROM base AS runner
