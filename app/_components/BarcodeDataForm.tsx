@@ -16,6 +16,7 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns"
 import { useCommonStore } from "@/store/common";
 import { createScannedDataAction, updateScannedDataAction } from "@/actions/sannedData";
+import { commonDateFormat } from "@/utils/constants";
 
 
 type Props = {
@@ -133,7 +134,7 @@ function BarcodeDataForm({ defaultBarcodeData }: Props) {
                                                 )}
                                             >
                                                 {field.value ? (
-                                                    format(field.value, 'P')
+                                                    format(field.value, commonDateFormat)
                                                 ) : (
                                                     <span>Sanani kiriting</span>
                                                 )}

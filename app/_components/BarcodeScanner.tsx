@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 import { DefaultBarcodeData } from '@/types/excelTypes';
 import { useTableContext } from '@/hooks/store-hooks/table-hook';
 import { parse } from 'date-fns';
+import { commonDateFormat } from '@/utils/constants';
 
 type Props = {}
 
@@ -55,9 +56,7 @@ function BarcodeScanner({ }: Props) {
 
             qrScannerStop()
             setScanModalHeader("Ma'lumotlar")
-            console.log("findProduct.Muddati: ", parse(findProduct.Muddati, "dd.MM.yyyy", new Date()));
-
-            setQrResult(findProduct ? { barcode: findProduct.Barcode.toString(), name: findProduct.Nomi, quantity: +findProduct.Miqdori, shelfLife: parse(findProduct.Muddati, "dd.MM.yyyy", new Date()), manufacturer: findProduct['Ishlab chiqaruvchi'], buyPrice: findProduct['Tan narxi'] } : { ...defaultBarcodeData, barcode: result })
+            setQrResult(findProduct ? { barcode: findProduct.Barcode.toString(), name: findProduct.Nomi, quantity: +findProduct.Miqdori, shelfLife: parse(findProduct.Muddati, commonDateFormat, new Date()), manufacturer: findProduct['Ishlab chiqaruvchi'], buyPrice: findProduct['Tan narxi'] } : { ...defaultBarcodeData, barcode: result })
         }
 
         if (openScannerModal) {

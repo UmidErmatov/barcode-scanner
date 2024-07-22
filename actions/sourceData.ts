@@ -28,6 +28,25 @@ export const sourceDataAction = async (excelCredential: ExcelDataType) => {
         })
     }
 
+    const existingRelatedSourceData = await db.sourceData.findFirst({
+        where: {
+            users: { some: { id: existingUser.id } }
+        }
+    })
+
+    if (existingRelatedSourceData) {
+        await db.sourceData.update({
+            where: { id: existingRelatedSourceData.id },
+            data: {
+                users: {
+                    disconnect: {
+                        id: existingUser.id
+                    }
+                }
+            }
+        })
+    }
+
     await db.sourceData.create({
         data: {
             uploaderId: existingUser.id,

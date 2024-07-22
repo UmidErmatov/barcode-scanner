@@ -38,6 +38,7 @@ import { deleteScannedDataAction } from "@/actions/sannedData"
 import { sourceDataAction } from "@/actions/sourceData"
 import { SearchUser } from "./SearchUser"
 import ExportToExcel from "./ExportToExcel"
+import { useCurrentUser } from "@/hooks/use-current-user"
 
 type Props = {
     // sourceData: SourceData | null,
@@ -46,6 +47,7 @@ type Props = {
 
 
 function InitialTable({ }: Props) {
+    const currentUser = useCurrentUser()
     const [tabContent, setOpenDialog, setTabContent] = useCommonStore(state => [state.tabContent, state.setOpenDialog, state.setTabContent])
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [excelData, currentData] = useTableContext(state => [state.excelData, state.currentData])
@@ -100,7 +102,7 @@ function InitialTable({ }: Props) {
                     <TabsTrigger value="current">Joriy</TabsTrigger>
                 </TabsList>
                 <div className="ml-auto flex items-center gap-2">
-                    {tabContent === "source" && <SearchUser />}
+                    {tabContent === "source" && excelData?.uploaderId === currentUser?.id && <SearchUser />}
                     <input
                         type="file"
                         ref={fileInputRef}

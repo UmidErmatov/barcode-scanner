@@ -30,5 +30,5 @@ export const navigation = [
         link: "/analytics",
         title: "Analytics",
         icon: "lineChart"
-    },
-    ]
+    },],
+    commonDateFormat = "dd.MM.yyyy"
