@@ -8,8 +8,9 @@ import BarcodeDataForm from './BarcodeDataForm';
 import { cn } from '@/lib/utils';
 import { DefaultBarcodeData } from '@/types/excelTypes';
 import { useTableContext } from '@/hooks/store-hooks/table-hook';
-import { parse } from 'date-fns';
+import { addDays, format, parse, startOfToday } from 'date-fns';
 import { commonDateFormat } from '@/utils/constants';
+import { excelDateToJSDate } from '@/utils/functions';
 
 type Props = {}
 
@@ -52,11 +53,18 @@ function BarcodeScanner({ }: Props) {
         }
 
         const qrCodeSuccess = (result: string) => {
+            console.log("result: ", result);
+
             const findProduct = tableData.find(excelProduct => excelProduct.Barcode.toString().split(",").includes(result))
+            const date = addDays(startOfToday(), findProduct.Muddati - 1);
+
+            // Format the date using date-fns format function
+            const formattedDate = format(date, commonDateFormat);
+            console.log("findProduct: ", format(excelDateToJSDate((findProduct.Muddati)), commonDateFormat));
 
             qrScannerStop()
             setScanModalHeader("Ma'lumotlar")
-            setQrResult(findProduct ? { barcode: findProduct.Barcode.toString(), name: findProduct.Nomi, quantity: +findProduct.Miqdori, shelfLife: parse(findProduct.Muddati, commonDateFormat, new Date()), manufacturer: findProduct['Ishlab chiqaruvchi'], buyPrice: findProduct['Tan narxi'] } : { ...defaultBarcodeData, barcode: result })
+            setQrResult(findProduct ? { barcode: findProduct.Barcode.toString(), name: findProduct.Nomi, quantity: +findProduct.Miqdori, shelfLife: excelDateToJSDate((findProduct.Muddati)), manufacturer: findProduct['Ishlab chiqaruvchi'], buyPrice: findProduct['Tan narxi'] } : { ...defaultBarcodeData, barcode: result })
         }
 
         if (openScannerModal) {
