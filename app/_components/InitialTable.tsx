@@ -79,6 +79,8 @@ function InitialTable({ }: Props) {
                     });
                     return rowData;
                 });
+                console.log("excelData; ", excelData);
+
                 sourceDataAction({ excelColumns, excelData })
                 // setExcelData({ excelColumns, excelData });
             };
@@ -91,7 +93,6 @@ function InitialTable({ }: Props) {
     }
 
     const updateCurrentProduct = (product: ScannedData) => {
-        console.log("product: ", product)
         setCurrentProduct(product)
         setOpenDialog(true)
     }
