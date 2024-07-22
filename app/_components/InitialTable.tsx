@@ -39,6 +39,7 @@ import { sourceDataAction } from "@/actions/sourceData"
 import { SearchUser } from "./SearchUser"
 import ExportToExcel from "./ExportToExcel"
 import { useCurrentUser } from "@/hooks/use-current-user"
+import { commonDateFormat } from "@/utils/constants"
 
 type Props = {
     // sourceData: SourceData | null,
@@ -234,7 +235,7 @@ function InitialTable({ }: Props) {
                                         <TableCell>{product.barcode}</TableCell>
                                         <TableCell>{product.name}</TableCell>
                                         <TableCell>{product.quantity}</TableCell>
-                                        <TableCell>{format(product.shelfLife, "P")}</TableCell>
+                                        <TableCell>{format(product.shelfLife, commonDateFormat)}</TableCell>
                                         <TableCell>{product.manufacturer}</TableCell>
                                         <TableCell>{product.buyPrice}</TableCell>
                                         <TableCell>
