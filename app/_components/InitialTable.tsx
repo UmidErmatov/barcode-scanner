@@ -79,9 +79,13 @@ function InitialTable({ }: Props) {
                     });
                     return rowData;
                 });
-                console.log("excelData; ", excelData);
 
-                sourceDataAction({ excelColumns, excelData })
+                sourceDataAction({ excelColumns, excelData }).then(data => {
+                    console.log("fff: ", data);
+
+                }).catch(err => console.log("err: ", err))
+
+                console.log("excelData; ", excelData);
                 // setExcelData({ excelColumns, excelData });
             };
             reader.readAsArrayBuffer(file);

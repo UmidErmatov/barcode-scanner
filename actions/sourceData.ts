@@ -28,32 +28,36 @@ export const sourceDataAction = async (excelCredential: ExcelDataType) => {
         })
     }
 
-    const existingRelatedSourceData = await db.sourceData.findFirst({
-        where: {
-            users: { some: { id: existingUser.id } }
-        }
-    })
+    // const existingRelatedSourceData = await db.sourceData.findFirst({
+    //     where: {
+    //         users: { some: { id: existingUser.id } }
+    //     }
+    // })
 
-    if (existingRelatedSourceData) {
-        await db.sourceData.update({
-            where: { id: existingRelatedSourceData.id },
+    // if (existingRelatedSourceData) {
+    //     await db.sourceData.update({
+    //         where: { id: existingRelatedSourceData.id },
+    //         data: {
+    //             users: {
+    //                 disconnect: {
+    //                     id: existingUser.id
+    //                 }
+    //             }
+    //         }
+    //     })
+    // }
+
+    try {
+        await db.sourceData.create({
             data: {
-                users: {
-                    disconnect: {
-                        id: existingUser.id
-                    }
-                }
-            }
+                uploaderId: existingUser.id,
+                excelData,
+                excelColumns
+            },
         })
+    } catch (error) {
+        console.log("save data error: ", error);
     }
-
-    await db.sourceData.create({
-        data: {
-            uploaderId: existingUser.id,
-            excelData,
-            excelColumns
-        },
-    })
 
     revalidatePath("/", 'page')
     return { success: "Ma'lumot qo'shildi!" }
