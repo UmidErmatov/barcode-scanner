@@ -19,13 +19,14 @@ import BarcodeDataForm from "./BarcodeDataForm"
 import { ScannedData } from "@prisma/client"
 
 type Props = {
-    product: ScannedData
+    product: ScannedData | null
 }
 
 export function DrawerDialog({ product }: Props) {
 
     const [openDialog, setOpenDialog] = useCommonStore(state => [state.openDialog, state.setOpenDialog])
     const isDesktop = useMediaQuery("(min-width: 768px)")
+    // console.log("product: ", product);
 
     if (isDesktop) {
         return (
@@ -36,7 +37,7 @@ export function DrawerDialog({ product }: Props) {
                             <DrawerTitle>Tahrirlash</DrawerTitle>
                         </DrawerHeader>
                         {/* <div className="p-4 pb-0 h-full"> */}
-                        <BarcodeDataForm defaultBarcodeData={product} />
+                        {product ? <BarcodeDataForm defaultBarcodeData={product} /> : "Mahsulot mavjud emas!"}
                         {/* </div> */}
                         <DrawerFooter className="px-0">
                             <DrawerClose asChild>
@@ -57,7 +58,7 @@ export function DrawerDialog({ product }: Props) {
                         <DrawerTitle>Tahrirlash</DrawerTitle>
                     </DrawerHeader>
                     {/* <div className="p-4 pb-0 h-full"> */}
-                    <BarcodeDataForm defaultBarcodeData={product} />
+                    {product ? <BarcodeDataForm defaultBarcodeData={product} /> : "Mahsulot mavjud emas!"}
                     {/* </div> */}
                     <DrawerFooter className="px-0">
                         <DrawerClose asChild>

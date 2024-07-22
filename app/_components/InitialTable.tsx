@@ -26,7 +26,7 @@ import {
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs"
-import { ChangeEvent, useRef } from "react"
+import { ChangeEvent, useRef, useState } from "react"
 import * as XLSX from 'xlsx'
 import { format } from "date-fns"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuShortcut, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
@@ -40,6 +40,7 @@ import { SearchUser } from "./SearchUser"
 import ExportToExcel from "./ExportToExcel"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { commonDateFormat } from "@/utils/constants"
+import { ScannedData } from "@prisma/client"
 
 type Props = {
     // sourceData: SourceData | null,
@@ -49,6 +50,7 @@ type Props = {
 
 function InitialTable({ }: Props) {
     const currentUser = useCurrentUser()
+    const [currentProduct, setCurrentProduct] = useState<ScannedData | null>(null)
     const [tabContent, setOpenDialog, setTabContent] = useCommonStore(state => [state.tabContent, state.setOpenDialog, state.setTabContent])
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [excelData, currentData] = useTableContext(state => [state.excelData, state.currentData])
@@ -88,7 +90,9 @@ function InitialTable({ }: Props) {
         deleteScannedDataAction(id)
     }
 
-    const updateCurrentProduct = () => {
+    const updateCurrentProduct = (product: ScannedData) => {
+        console.log("product: ", product)
+        setCurrentProduct(product)
         setOpenDialog(true)
     }
 
@@ -239,7 +243,7 @@ function InitialTable({ }: Props) {
                                         <TableCell>{product.manufacturer}</TableCell>
                                         <TableCell>{product.buyPrice}</TableCell>
                                         <TableCell>
-                                            <DrawerDialog product={product} />
+                                            <DrawerDialog product={currentProduct} />
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger asChild>
                                                     <Button variant="ghost" className="h-8 w-8 p-0">
@@ -249,7 +253,7 @@ function InitialTable({ }: Props) {
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
                                                     <DropdownMenuItem
-                                                        onClick={() => updateCurrentProduct()}
+                                                        onClick={() => updateCurrentProduct(product)}
                                                     >
                                                         Tahrirlash
                                                         <DropdownMenuShortcut>
