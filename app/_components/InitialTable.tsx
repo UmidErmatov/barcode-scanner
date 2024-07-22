@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/tabs"
 import { ChangeEvent, useRef, useState } from "react"
 import * as XLSX from 'xlsx'
-import { format } from "date-fns"
+import { format, parse, parseISO } from "date-fns"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuShortcut, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { DotsHorizontalIcon } from "@radix-ui/react-icons"
 import { useCommonStore } from "@/store/common"
@@ -41,6 +41,7 @@ import ExportToExcel from "./ExportToExcel"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { commonDateFormat } from "@/utils/constants"
 import { ScannedData } from "@prisma/client"
+import { excelDateToJSDate } from "@/utils/functions"
 
 type Props = {
     // sourceData: SourceData | null,
@@ -72,20 +73,17 @@ function InitialTable({ }: Props) {
                 const excelColumns: any = json[0]; // First row for column names
                 const rows = json.slice(1); // Rest rows for data
 
-                const excelData = rows.map((row: any) => {
+                const excelData = rows.flatMap((row: any) => {
                     const rowData: any = {};
                     excelColumns.forEach((col: any, index: number) => {
                         rowData[col] = row[index];
                     });
-                    return rowData;
+                    if (Object.keys(rowData).length < 6) {
+                        return []
+                    } else
+                        return { ...rowData, Muddati: excelDateToJSDate(rowData.Muddati) };
                 });
-
-                sourceDataAction({ excelColumns, excelData }).then(data => {
-                    console.log("fff: ", data);
-
-                }).catch(err => console.log("err: ", err))
-
-                console.log("excelData; ", excelData);
+                sourceDataAction({ excelColumns, excelData })
                 // setExcelData({ excelColumns, excelData });
             };
             reader.readAsArrayBuffer(file);
@@ -103,6 +101,7 @@ function InitialTable({ }: Props) {
 
     const tableData = excelData && excelData.excelData && typeof excelData.excelData === 'object' &&
         Array.isArray(excelData.excelData) ? excelData.excelData as any[] : []
+    // console.log("excelData: ", (excelData?.excelData as []));
 
     return (
         <Tabs defaultValue={tabContent} onValueChange={value => setTabContent(value)}>
@@ -177,7 +176,7 @@ function InitialTable({ }: Props) {
                                     <TableRow key={product?.Barcode + index || index}>
                                         {excelData?.excelColumns.map((header: string) => {
                                             return (
-                                                <TableCell key={header}>{product[header]}</TableCell>
+                                                <TableCell key={header}>{header === "Muddati" ? product[header] ? format(parseISO(product[header]), commonDateFormat) : "-" : product[header]}</TableCell>
                                             )
                                         })}
 
