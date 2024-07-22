@@ -203,7 +203,7 @@ function InitialTable({ }: Props) {
                             className="w-full overflow-clip relative"
                             containerClassname="h-fit h-[calc(100vh-240px)] overflow-y-auto relative"
                         >
-                            {currentData.length ? <TableHeader className="sticky w-full top-0 dark:bg-slate-800 bg-slate-100">
+                            <TableHeader className="sticky w-full top-0 dark:bg-slate-800 bg-slate-100">
                                 <TableRow>
                                     <TableHead>
                                         Barcode
@@ -227,7 +227,7 @@ function InitialTable({ }: Props) {
                                         Action
                                     </TableHead>
                                 </TableRow>
-                            </TableHeader> : undefined}
+                            </TableHeader>
                             <TableBody>
                                 {currentData.length ? <>{currentData.map((product, index) => (
                                     <TableRow key={product.id}>
@@ -271,7 +271,7 @@ function InitialTable({ }: Props) {
                                 ))}</> : (
                                     <TableRow>
                                         <TableCell
-                                            colSpan={4}
+                                            colSpan={7}
                                             className="h-24 text-center"
                                         >
                                             Skanerlang
