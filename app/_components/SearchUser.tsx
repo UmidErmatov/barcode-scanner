@@ -19,14 +19,12 @@ import { useState, useTransition } from "react"
 import { addUserToSourceAction, removeUserFromSourceAction, searchUserAction } from "@/actions/searUser"
 import { useTableContext } from "@/hooks/store-hooks/table-hook"
 import { UserMinus, UserPlus } from "lucide-react"
-import { useToast } from "@/components/ui/use-toast"
 
 export function SearchUser() {
-    const { toast } = useToast()
     const [open, setOpen] = useState(false)
-    const excelData = useTableContext(state => state.excelData)
+    const employees = useTableContext(state => state.employees)
     const [isPending, startTransition] = useTransition()
-    const [userData, setUserData] = useState<any[]>(excelData ? (excelData as any).users.map((user: any) => ({ ...user, added: true })) : [])
+    const [userData, setUserData] = useState<any[]>(employees ? employees.map((user: any) => ({ ...user, added: true })) : [])
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
@@ -47,7 +45,7 @@ export function SearchUser() {
                         className="h-9"
                         onValueChange={value => {
                             if (!value) {
-                                setUserData(excelData ? (excelData as any).users.map((user: any) => ({ ...user, added: true })) : [])
+                                setUserData(employees ? employees.map((user: any) => ({ ...user, added: true })) : [])
                             } else {
                                 searchUserAction(value.toLocaleLowerCase())
                                     .then(data => {
@@ -76,26 +74,19 @@ export function SearchUser() {
                                             className="ml-auto"
                                             disabled={isPending}
                                             onClick={() => {
-                                                if (excelData) {
-                                                    startTransition(() => {
-                                                        if (user.added) {
-                                                            removeUserFromSourceAction(user.id, excelData.id)
-                                                                .then(() => {
-                                                                    setUserData(userData.map(u => u.id == user.id ? ({ ...u, added: false }) : u))
-                                                                })
-                                                        } else {
-                                                            addUserToSourceAction(user.id, excelData.id)
-                                                                .then(() => {
-                                                                    setUserData(userData.map(u => u.id == user.id ? ({ ...u, added: true }) : u))
-                                                                })
-                                                        }
-
-                                                    })
-                                                } else {
-                                                    toast({
-                                                        description: "Excel file yuklang",
-                                                    })
-                                                }
+                                                startTransition(() => {
+                                                    if (user.added) {
+                                                        removeUserFromSourceAction(user.id)
+                                                            .then(() => {
+                                                                setUserData(userData.map(u => u.id == user.id ? ({ ...u, added: false }) : u))
+                                                            })
+                                                    } else {
+                                                        addUserToSourceAction(user.id)
+                                                            .then(() => {
+                                                                setUserData(userData.map(u => u.id == user.id ? ({ ...u, added: true }) : u))
+                                                            })
+                                                    }
+                                                })
                                             }}
                                         >
                                             {user.added ? <UserMinus className="h-4 w-4" /> : <UserPlus className="h-4 w-4" />}

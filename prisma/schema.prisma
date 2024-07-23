@@ -43,8 +43,11 @@ model User {
 
   scannedData ScannedData[]
 
-  sourceData SourceData? @relation(fields: [sourceId], references: [id])
-  sourceId   String?
+  employees User[] @relation("Employees")
+
+  sourceId String?
+
+  User User[] @relation("Employees")
 }
 
 model Account {
@@ -126,8 +129,6 @@ model SourceData {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  users User[]
 }
 
 model ScannedData {

@@ -34,7 +34,7 @@ export const searchUserAction = async (text: string) => {
     }
 }
 
-export const addUserToSourceAction = async (userId: string, sourceId: string) => {
+export const addUserToSourceAction = async (userId: string) => {
     const user = await currentUser()
     if (!user) return { error: "Avtorizatsiyadan o'tmagan!" }
     const existingUser = await db.user.findUnique({
@@ -42,10 +42,10 @@ export const addUserToSourceAction = async (userId: string, sourceId: string) =>
     })
     if (!existingUser) return { error: "Foydalanuvchi topilmadi!" }
 
-    await db.sourceData.update({
-        where: { id: sourceId },
+    await db.user.update({
+        where: { id: existingUser.id },
         data: {
-            users: {
+            employees: {
                 connect: {
                     id: userId,
                 }
@@ -54,7 +54,8 @@ export const addUserToSourceAction = async (userId: string, sourceId: string) =>
     })
     revalidatePath("/", "page")
 }
-export const removeUserFromSourceAction = async (userId: string, sourceId: string) => {
+
+export const removeUserFromSourceAction = async (userId: string) => {
     const user = await currentUser()
     if (!user) return { error: "Avtorizatsiyadan o'tmagan!" }
     const existingUser = await db.user.findUnique({
@@ -62,10 +63,10 @@ export const removeUserFromSourceAction = async (userId: string, sourceId: strin
     })
     if (!existingUser) return { error: "Foydalanuvchi topilmadi!" }
 
-    await db.sourceData.update({
-        where: { id: sourceId },
+    await db.user.update({
+        where: { id: existingUser.id },
         data: {
-            users: {
+            employees: {
                 disconnect: {
                     id: userId,
                 }

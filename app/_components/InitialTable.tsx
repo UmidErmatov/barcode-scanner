@@ -1,7 +1,6 @@
 "use client"
 import {
     FileDown,
-    FileUp,
     Pencil,
     Trash,
 } from "lucide-react"
@@ -41,7 +40,7 @@ import ExportToExcel from "./ExportToExcel"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { commonDateFormat } from "@/utils/constants"
 import { ScannedData } from "@prisma/client"
-import { excelDateToJSDate } from "@/utils/functions"
+import { excelDateToJSDate, tableShelfLife } from "@/utils/functions"
 import { ConfirmDialog } from "@/components/Confirmation"
 
 type Props = {
@@ -56,7 +55,7 @@ function InitialTable({ }: Props) {
     const [currentProduct, setCurrentProduct] = useState<ScannedData | null>(null)
     const [tabContent, setOpenDialog, setTabContent] = useCommonStore(state => [state.tabContent, state.setOpenDialog, state.setTabContent])
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const [excelData, currentData] = useTableContext(state => [state.excelData, state.currentData])
+    const [excelData, currentData, employees] = useTableContext(state => [state.excelData, state.currentData, state.employees])
 
     const handleButtonClick = () => {
         fileInputRef.current?.click();
@@ -103,7 +102,7 @@ function InitialTable({ }: Props) {
 
     const tableData = excelData && excelData.excelData && typeof excelData.excelData === 'object' &&
         Array.isArray(excelData.excelData) ? excelData.excelData as any[] : []
-    // console.log("excelData: ", (excelData?.excelData as []));
+
 
     return (
         <Tabs defaultValue={tabContent} onValueChange={value => setTabContent(value)}>
@@ -113,7 +112,7 @@ function InitialTable({ }: Props) {
                     <TabsTrigger value="current">Joriy</TabsTrigger>
                 </TabsList>
                 <div className="ml-auto flex items-center gap-2">
-                    {tabContent === "source" && excelData?.uploaderId === currentUser?.id && <SearchUser />}
+                    {tabContent === "source" && employees && <SearchUser />}
                     <input
                         type="file"
                         ref={fileInputRef}
@@ -122,7 +121,7 @@ function InitialTable({ }: Props) {
                         onChange={handleFileChange}
                     />
                     {tabContent === "current" && <ExportToExcel />}
-                    {tabContent === "source" && <Button
+                    {tabContent === "source" && employees && <Button
                         size="sm"
                         variant="outline"
                         className="h-7 gap-1 text-sm"
@@ -140,7 +139,7 @@ function InitialTable({ }: Props) {
                             <span className="flex items-center">
                                 Mahsulotlar ro'yhati
                             </span>
-                            <ConfirmDialog
+                            {!!employees && <ConfirmDialog
                                 saveText="Ha"
                                 cancelText="Yo'q"
                                 title="Manba o'chirilsinmi?"
@@ -158,7 +157,7 @@ function InitialTable({ }: Props) {
                                     <Trash className="h-4 w-4" />
                                     {/* <span className="sr-only sm:not-sr-only">O'chirish</span> */}
                                 </Button>
-                            </ConfirmDialog>
+                            </ConfirmDialog>}
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -197,11 +196,11 @@ function InitialTable({ }: Props) {
                                 </TableRow>
                             </TableHeader>}
                             <TableBody>
-                                {tableData.length ? <>{tableData.map((product, index) => (
+                                {tableData.length && excelData?.excelColumns.length ? <>{tableData.map((product, index) => (
                                     <TableRow key={product?.Barcode + index || index}>
                                         {excelData?.excelColumns.map((header: string) => {
                                             return (
-                                                <TableCell key={header}>{header === "Muddati" ? product[header] ? format(parseISO(product[header]), commonDateFormat) : "-" : product[header]}</TableCell>
+                                                <TableCell key={header}>{header === "Muddati" ? product[header] ? tableShelfLife(product[header]) : "-" : product[header]}</TableCell>
                                             )
                                         })}
 

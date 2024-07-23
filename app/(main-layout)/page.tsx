@@ -9,21 +9,44 @@ export default async function MainPage() {
     if (!user) {
         return <div>Avtorizatsiyadan o&apos;tmagan</div>;
     }
-    const sourceData = await db.sourceData.findFirst({
+
+    let sourceData = null;
+    let employees = null;
+
+    const myMourceData = await db.sourceData.findUnique({
         where: {
-            OR: [
-                {
-                    uploaderId: user.id,
-                },
-                { users: { some: { id: user.id } } },
-            ],
-        },
-        include: {
-            users: {
-                select: { id: true, fullname: true, email: true }
-            }
+            uploaderId: user.id
         }
     })
+
+    const userData = await db.user.findUnique({
+        where: { id: user.id },
+        include: {
+            employees: true
+        }
+    })
+
+    employees = userData && userData.employees
+
+    const findRelatedUser = await db.user.findFirst({
+        where: {
+            employees: { some: { id: user.id } }
+        },
+        include: {
+            employees: true
+        }
+    })
+    if (findRelatedUser) {
+        console.log("findRelatedUser: ", findRelatedUser);
+        employees = null
+        sourceData = await db.sourceData.findUnique({
+            where: {
+                uploaderId: findRelatedUser.id
+            }
+        })
+    } else {
+        sourceData = myMourceData
+    }
 
     const scannedData = await db.scannedData.findMany({
         where: { userId: user.id },
@@ -34,6 +57,7 @@ export default async function MainPage() {
         <TableStoreProvider
             excelData={sourceData}
             currentData={scannedData}
+            employees={employees}
         >
             <div className="flex flex-col h-full">
                 <div className="flex-grow overflow-auto">

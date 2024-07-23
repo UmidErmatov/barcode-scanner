@@ -57,6 +57,9 @@ function BarcodeDataForm({ defaultBarcodeData }: Props) {
         }
     }
 
+    console.log("defaultBarcodeData.shelfLife: ", new Date(defaultBarcodeData.shelfLife) === new Date());
+
+
     return (
         <Form {...form}>
             <form
@@ -92,7 +95,7 @@ function BarcodeDataForm({ defaultBarcodeData }: Props) {
                                     <Input
                                         {...field}
                                         placeholder='Mahsulot nomini kiriting'
-                                        disabled={isPending}
+                                        disabled={isPending || !!defaultBarcodeData.name}
                                     />
                                 </FormControl>
                                 <FormMessage />
@@ -110,7 +113,8 @@ function BarcodeDataForm({ defaultBarcodeData }: Props) {
                                         {...field}
                                         placeholder='5'
                                         type='number'
-                                        disabled={isPending}
+                                        autoFocus
+                                        disabled={isPending || !!defaultBarcodeData.quantity}
                                         onChange={(e) => field.onChange(e.target.value ? e.target.valueAsNumber : e.target.value)}
                                     />
                                 </FormControl>
@@ -134,6 +138,7 @@ function BarcodeDataForm({ defaultBarcodeData }: Props) {
                                                     "w-full text-left font-normal",
                                                     !field.value && "text-muted-foreground"
                                                 )}
+                                                disabled={isPending || new Date(defaultBarcodeData.shelfLife) !== new Date()}
                                             >
                                                 {field.value ? (
                                                     format(field.value, commonDateFormat)
@@ -171,7 +176,7 @@ function BarcodeDataForm({ defaultBarcodeData }: Props) {
                                     <Input
                                         {...field}
                                         placeholder='Ishlab chiqaruvchi nomini kiriting'
-                                        disabled={isPending}
+                                        disabled={isPending || !!defaultBarcodeData.manufacturer}
                                     />
                                 </FormControl>
                                 <FormMessage />
@@ -189,7 +194,7 @@ function BarcodeDataForm({ defaultBarcodeData }: Props) {
                                         {...field}
                                         placeholder='100'
                                         type='number'
-                                        disabled={isPending}
+                                        disabled={isPending || !!defaultBarcodeData.buyPrice}
                                         onChange={(e) => field.onChange(e.target.value ? e.target.valueAsNumber : e.target.value)}
                                     />
                                 </FormControl>
