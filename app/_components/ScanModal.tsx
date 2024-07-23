@@ -24,7 +24,6 @@ import { ScanBarcode } from "lucide-react"
 import BarcodeScanner from "./BarcodeScanner"
 import { useCommonStore } from "@/store/common"
 
-
 type Props = {}
 
 function ScanModal({ }: Props) {

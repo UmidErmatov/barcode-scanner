@@ -48,6 +48,10 @@ export const BarcodeSchema = z.object({
     }).min(1, {
         message: "Miqdorni kiritish majburiy!"
     }),
+    peace: z.optional(z.number({
+        required_error: "Raqam kiritng",
+        invalid_type_error: "Raqam kiritng"
+    })),
     shelfLife: z.date({
         required_error: "Muddatni kiriting.",
     }),

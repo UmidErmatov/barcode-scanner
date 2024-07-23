@@ -37,7 +37,6 @@ export default async function MainPage() {
         }
     })
     if (findRelatedUser) {
-        console.log("findRelatedUser: ", findRelatedUser);
         employees = null
         sourceData = await db.sourceData.findUnique({
             where: {

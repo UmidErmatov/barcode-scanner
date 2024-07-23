@@ -21,7 +21,7 @@ export const createScannedDataAction = async (values: z.infer<typeof BarcodeSche
 
     if (!existingUser) return { error: "Foydalanuvchi topilmadi!" }
 
-    const { barcode, name, quantity, shelfLife, buyPrice, manufacturer } = validatedFields.data
+    const { barcode, name, quantity, shelfLife, buyPrice, manufacturer, peace } = validatedFields.data
 
     await db.scannedData.create({
         data: {
@@ -29,6 +29,7 @@ export const createScannedDataAction = async (values: z.infer<typeof BarcodeSche
             name,
             shelfLife,
             quantity,
+            peace,
             manufacturer,
             buyPrice,
             user: {
@@ -58,7 +59,7 @@ export const updateScannedDataAction = async (values: z.infer<typeof BarcodeSche
 
     if (!existingUser) return { error: "Foydalanuvchi topilmadi!" }
 
-    const { name, quantity, shelfLife, buyPrice, manufacturer } = validatedFields.data
+    const { name, quantity, shelfLife, buyPrice, manufacturer, peace } = validatedFields.data
 
     await db.scannedData.update({
         where: { id: scanDataId },
@@ -66,6 +67,7 @@ export const updateScannedDataAction = async (values: z.infer<typeof BarcodeSche
             name,
             shelfLife,
             quantity,
+            peace,
             manufacturer,
             buyPrice
         },
@@ -91,6 +93,7 @@ export const deleteScannedDataAction = async (scanDataId: string) => {
     revalidatePath("/", 'page')
     return { success: "Ma'lumot o'chirildi!" }
 }
+
 export const deleteAllScannedDataAction = async () => {
 
     const user = await currentUser()

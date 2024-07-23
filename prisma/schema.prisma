@@ -136,6 +136,7 @@ model ScannedData {
   barcode      String
   name         String
   quantity     Int
+  peace        Int?
   shelfLife    DateTime
   manufacturer String
   buyPrice     Int

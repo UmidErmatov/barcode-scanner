@@ -2,7 +2,7 @@
 "use client"
 import { useCommonStore } from '@/store/common';
 import { Html5Qrcode, Html5QrcodeCameraScanConfig } from 'html5-qrcode';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './codeScannerStyle.css'
 import BarcodeDataForm from './BarcodeDataForm';
 import { cn } from '@/lib/utils';
@@ -12,10 +12,13 @@ import { useTableContext } from '@/hooks/store-hooks/table-hook';
 type Props = {}
 
 function BarcodeScanner({ }: Props) {
+    const audioRef = useRef<HTMLAudioElement | null>(null);
+
     const defaultBarcodeData: DefaultBarcodeData = {
         barcode: "",
         name: "",
         quantity: 0,
+        peace: 0,
         shelfLife: new Date(),
         manufacturer: "",
         buyPrice: 0,
@@ -50,6 +53,10 @@ function BarcodeScanner({ }: Props) {
         }
 
         const qrCodeSuccess = (result: string) => {
+            if (audioRef.current) {
+                audioRef.current.currentTime = 0;
+                audioRef.current.play();
+            }
             const findProduct = tableData.find(excelProduct => excelProduct.Barcode.toString().split(",").includes(result))
 
             qrScannerStop()
@@ -71,6 +78,7 @@ function BarcodeScanner({ }: Props) {
 
     return (
         <>
+            <audio ref={audioRef} src="/scanner-beep.mp3" preload="auto" hidden />
             <div id='qrCodeContainer' className={cn(qrResult.barcode ? 'hidden' : '')} />
             {qrResult.barcode && <BarcodeDataForm defaultBarcodeData={{ ...qrResult, id: "" }} />}
         </>

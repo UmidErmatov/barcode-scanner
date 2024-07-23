@@ -17,6 +17,12 @@ import { format } from "date-fns"
 import { useCommonStore } from "@/store/common";
 import { createScannedDataAction, updateScannedDataAction } from "@/actions/sannedData";
 import { commonDateFormat } from "@/utils/constants";
+import {
+    InputOTP,
+    InputOTPGroup,
+    InputOTPSeparator,
+    InputOTPSlot,
+} from "@/components/ui/input-otp"
 
 
 type Props = {
@@ -24,13 +30,15 @@ type Props = {
 }
 
 function BarcodeDataForm({ defaultBarcodeData }: Props) {
+    console.log('defaultBarcodeData, ', defaultBarcodeData);
+
     const [openDialog, setOpenDialog, setOpenScannerModal] = useCommonStore(state => [state.openDialog, state.setOpenDialog, state.setOpenScannerModal])
     const [isPending, startTransition] = useTransition()
     const [error, setError] = useState<any>("")
     const [success, setSuccess] = useState<any>("")
     const form = useForm<z.infer<typeof BarcodeSchema>>({
         resolver: zodResolver(BarcodeSchema),
-        defaultValues: defaultBarcodeData
+        defaultValues: { ...defaultBarcodeData, quantity: defaultBarcodeData.quantity ? defaultBarcodeData.quantity : undefined }
     });
 
     const onSubmit = (values: z.infer<typeof BarcodeSchema>) => {
@@ -56,9 +64,6 @@ function BarcodeDataForm({ defaultBarcodeData }: Props) {
             })
         }
     }
-
-    console.log("defaultBarcodeData.shelfLife: ", new Date(defaultBarcodeData.shelfLife) === new Date());
-
 
     return (
         <Form {...form}>
@@ -114,6 +119,25 @@ function BarcodeDataForm({ defaultBarcodeData }: Props) {
                                         placeholder='5'
                                         type='number'
                                         autoFocus
+                                        disabled={isPending}
+                                        onChange={(e) => field.onChange(e.target.value ? e.target.valueAsNumber : e.target.value)}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name='peace'
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Dona</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        {...field}
+                                        placeholder='0'
+                                        type='number'
                                         disabled={isPending}
                                         onChange={(e) => field.onChange(e.target.value ? e.target.valueAsNumber : e.target.value)}
                                     />

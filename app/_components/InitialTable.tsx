@@ -50,7 +50,6 @@ type Props = {
 
 
 function InitialTable({ }: Props) {
-    const currentUser = useCurrentUser()
     const [isPending, startTransition] = useTransition()
     const [currentProduct, setCurrentProduct] = useState<ScannedData | null>(null)
     const [tabContent, setOpenDialog, setTabContent] = useCommonStore(state => [state.tabContent, state.setOpenDialog, state.setTabContent])
@@ -273,6 +272,9 @@ function InitialTable({ }: Props) {
                                         Miqdori
                                     </TableHead>
                                     <TableHead>
+                                        Dona
+                                    </TableHead>
+                                    <TableHead>
                                         Muddati
                                     </TableHead>
                                     <TableHead>
@@ -292,6 +294,7 @@ function InitialTable({ }: Props) {
                                         <TableCell>{product.barcode}</TableCell>
                                         <TableCell>{product.name}</TableCell>
                                         <TableCell>{product.quantity}</TableCell>
+                                        <TableCell>{product.peace ? product.peace : 0}</TableCell>
                                         <TableCell>{format(product.shelfLife, commonDateFormat)}</TableCell>
                                         <TableCell>{product.manufacturer}</TableCell>
                                         <TableCell>{product.buyPrice}</TableCell>
@@ -313,11 +316,11 @@ function InitialTable({ }: Props) {
                                                             <Pencil className="h-4 w-4" />
                                                         </DropdownMenuShortcut>
                                                     </DropdownMenuItem>
-                                                    <DropdownMenuItem className="text-destructive"
+                                                    <DropdownMenuItem
                                                         onClick={() => deleteCurrentProduct(product.id)}
                                                     >
                                                         O'chirish
-                                                        <DropdownMenuShortcut>
+                                                        <DropdownMenuShortcut className="text-destructive">
                                                             <Trash className="h-4 w-4" />
                                                         </DropdownMenuShortcut>
                                                     </DropdownMenuItem>

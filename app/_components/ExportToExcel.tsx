@@ -16,7 +16,7 @@ function ExportToExcel({ }: Props) {
 
     const exportToExcel = () => {
         const filename = "revision"
-        const excelData = currentData.map(data => ({ Barcode: data.barcode, Nomi: data.name, Miqdori: data.quantity, Muddati: format(data.shelfLife, commonDateFormat), "Ishlab chiqaruvchi": data.manufacturer, "Tan narxi": data.buyPrice }))
+        const excelData = currentData.map(data => ({ Barcode: data.barcode, Nomi: data.name, Miqdori: data.quantity, Dona: data.peace, Muddati: format(data.shelfLife, commonDateFormat), "Ishlab chiqaruvchi": data.manufacturer, "Tan narxi": data.buyPrice }))
 
         const worksheet = utils.json_to_sheet(excelData);
         const workbook = utils.book_new();
