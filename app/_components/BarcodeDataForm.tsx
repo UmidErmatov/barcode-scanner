@@ -236,6 +236,12 @@ function BarcodeDataForm({ defaultBarcodeData }: Props) {
                 >
                     Saqlash
                 </Button>
+                {/* <Button
+                    className='w-full'
+                    disabled={isPending}
+                >
+                    Bekor qilish
+                </Button> */}
             </form>
         </Form>
     )

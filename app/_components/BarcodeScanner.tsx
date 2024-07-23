@@ -87,11 +87,11 @@ function BarcodeScanner({ }: Props) {
     }, [openScannerModal])
 
     return (
-        <>
+        <div className='px-4'>
             <audio ref={audioRef} src="/scanner-beep.mp3" preload="auto" hidden />
             <div id='qrCodeContainer' className={cn(qrResult.barcode ? 'hidden' : '')} />
             {qrResult.barcode && <BarcodeDataForm defaultBarcodeData={{ ...qrResult, id: "" }} />}
-        </>
+        </div>
     )
 }
 
