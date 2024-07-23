@@ -8,10 +8,12 @@ import BarcodeDataForm from './BarcodeDataForm';
 import { cn } from '@/lib/utils';
 import { DefaultBarcodeData } from '@/types/excelTypes';
 import { useTableContext } from '@/hooks/store-hooks/table-hook';
+import { useToast } from "@/components/ui/use-toast"
 
 type Props = {}
 
 function BarcodeScanner({ }: Props) {
+    const { toast } = useToast()
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
     const defaultBarcodeData: DefaultBarcodeData = {
@@ -57,11 +59,19 @@ function BarcodeScanner({ }: Props) {
                 audioRef.current.currentTime = 0;
                 audioRef.current.play();
             }
-            const findProduct = tableData.find(excelProduct => excelProduct.Barcode.toString().split(",").includes(result))
 
-            qrScannerStop()
-            setScanModalHeader("Ma'lumotlar")
-            setQrResult(findProduct ? { barcode: findProduct.Barcode.toString(), name: findProduct.Nomi, quantity: +findProduct.Miqdori, shelfLife: new Date(findProduct.Muddati), manufacturer: findProduct['Ishlab chiqaruvchi'], buyPrice: findProduct['Tan narxi'] } : { ...defaultBarcodeData, barcode: result })
+            const findProduct = tableData.find(excelProduct => excelProduct?.Barcode?.toString()?.split(",")?.map((code: string) => code.trim())?.includes(result))
+            if (findProduct) {
+                qrScannerStop()
+                setScanModalHeader("Ma'lumotlar")
+                setQrResult(findProduct ? { barcode: findProduct.Barcode.toString(), name: findProduct.Nomi, quantity: +findProduct.Miqdori, shelfLife: new Date(findProduct.Muddati), manufacturer: findProduct['Ishlab chiqaruvchi'], buyPrice: findProduct['Tan narxi'] } : { ...defaultBarcodeData, barcode: result })
+            } else {
+                toast({
+                    title: "Qutiga tashlang!",
+                    variant: 'destructive'
+                })
+                return
+            }
         }
 
         if (openScannerModal) {
