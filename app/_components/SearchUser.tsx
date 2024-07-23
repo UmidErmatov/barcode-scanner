@@ -49,7 +49,7 @@ export function SearchUser() {
                             if (!value) {
                                 setUserData(excelData ? (excelData as any).users.map((user: any) => ({ ...user, added: true })) : [])
                             } else {
-                                searchUserAction(value)
+                                searchUserAction(value.toLocaleLowerCase())
                                     .then(data => {
                                         setUserData((data as any[]).map(item => {
                                             const exisUser = userData.find(user => user.id === item.id)

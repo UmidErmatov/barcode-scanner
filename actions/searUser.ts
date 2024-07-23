@@ -29,6 +29,8 @@ export const searchUserAction = async (text: string) => {
         return data
     } catch (error) {
         // throw new Error(error as any)
+        console.log("search users error: ", error)
+        return { error: "Serverda xatolik" }
     }
 }
 

@@ -62,3 +62,23 @@ export const sourceDataAction = async (excelCredential: ExcelDataType) => {
     revalidatePath("/", 'page')
     return { success: "Ma'lumot qo'shildi!" }
 }
+
+
+export const deleteSourceData = async () => {
+    const user = await currentUser()
+
+    if (!user) return { error: "Avtorizatsiyadan o'tmagan!" }
+
+    const existingUser = await db.user.findUnique({
+        where: { id: user.id }
+    })
+
+    if (!existingUser) return { error: "Foydalanuvchi topilmadi!" }
+
+    await db.sourceData.delete({
+        where: { uploaderId: existingUser.id }
+    })
+
+    revalidatePath("/", 'page')
+    return { success: "Manba o'chirildi!" }
+}

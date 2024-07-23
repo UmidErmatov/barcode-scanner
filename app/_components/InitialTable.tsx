@@ -26,22 +26,23 @@ import {
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs"
-import { ChangeEvent, useRef, useState } from "react"
+import { ChangeEvent, useRef, useState, useTransition } from "react"
 import * as XLSX from 'xlsx'
-import { format, parse, parseISO } from "date-fns"
+import { format, parseISO } from "date-fns"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuShortcut, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { DotsHorizontalIcon } from "@radix-ui/react-icons"
 import { useCommonStore } from "@/store/common"
 import { DrawerDialog } from "./UpdateDataModal"
 import { useTableContext } from "@/hooks/store-hooks/table-hook"
-import { deleteScannedDataAction } from "@/actions/sannedData"
-import { sourceDataAction } from "@/actions/sourceData"
+import { deleteAllScannedDataAction, deleteScannedDataAction } from "@/actions/sannedData"
+import { deleteSourceData, sourceDataAction } from "@/actions/sourceData"
 import { SearchUser } from "./SearchUser"
 import ExportToExcel from "./ExportToExcel"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { commonDateFormat } from "@/utils/constants"
 import { ScannedData } from "@prisma/client"
 import { excelDateToJSDate } from "@/utils/functions"
+import { ConfirmDialog } from "@/components/Confirmation"
 
 type Props = {
     // sourceData: SourceData | null,
@@ -51,6 +52,7 @@ type Props = {
 
 function InitialTable({ }: Props) {
     const currentUser = useCurrentUser()
+    const [isPending, startTransition] = useTransition()
     const [currentProduct, setCurrentProduct] = useState<ScannedData | null>(null)
     const [tabContent, setOpenDialog, setTabContent] = useCommonStore(state => [state.tabContent, state.setOpenDialog, state.setTabContent])
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -134,7 +136,30 @@ function InitialTable({ }: Props) {
             <TabsContent value="source">
                 <Card x-chunk="dashboard-05-chunk-3">
                     <CardHeader className="px-7">
-                        <CardTitle>Mahsulotlar ro'yhati</CardTitle>
+                        <CardTitle className="flex justify-between">
+                            <span className="flex items-center">
+                                Mahsulotlar ro'yhati
+                            </span>
+                            <ConfirmDialog
+                                saveText="Ha"
+                                cancelText="Yo'q"
+                                title="Manba o'chirilsinmi?"
+                                onConfirm={() => {
+                                    deleteSourceData()
+                                }}
+                                saveLoading={isPending}
+                            >
+                                <Button
+                                    variant='destructive'
+                                    size="icon"
+                                    className="h-7 gap-1 text-sm"
+                                    disabled={!excelData}
+                                >
+                                    <Trash className="h-4 w-4" />
+                                    {/* <span className="sr-only sm:not-sr-only">O'chirish</span> */}
+                                </Button>
+                            </ConfirmDialog>
+                        </CardTitle>
                     </CardHeader>
                     <CardContent>
                         <Table
@@ -205,7 +230,32 @@ function InitialTable({ }: Props) {
             <TabsContent value="current">
                 <Card x-chunk="dashboard-05-chunk-3" >
                     <CardHeader className="px-7">
-                        <CardTitle>Kiritilgan mahsulotlar ro'yhati</CardTitle>
+                        <CardTitle className="flex justify-between">
+                            <span className="flex items-center">
+                                Kiritilgan mahsulotlar ro'yhati
+                            </span>
+                            <ConfirmDialog
+                                saveText="Ha"
+                                cancelText="Yo'q"
+                                title="Mahsulotlar ro'yhati o'chirilsinmi?"
+                                onConfirm={() => {
+                                    startTransition(() => {
+                                        deleteAllScannedDataAction()
+                                    })
+                                }}
+                                saveLoading={isPending}
+                            >
+                                <Button
+                                    variant='destructive'
+                                    size="icon"
+                                    className="h-7 gap-1 text-sm"
+                                    disabled={!currentData.length}
+                                >
+                                    <Trash className="h-4 w-4" />
+                                    {/* <span className="sr-only sm:not-sr-only">O'chirish</span> */}
+                                </Button>
+                            </ConfirmDialog>
+                        </CardTitle>
                     </CardHeader>
                     <CardContent>
                         <Table

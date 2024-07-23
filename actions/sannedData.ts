@@ -91,3 +91,24 @@ export const deleteScannedDataAction = async (scanDataId: string) => {
     revalidatePath("/", 'page')
     return { success: "Ma'lumot o'chirildi!" }
 }
+export const deleteAllScannedDataAction = async () => {
+
+    const user = await currentUser()
+    if (!user) return { error: "Avtorizatsiyadan o'tmagan!" }
+
+    const existingUser = await db.user.findUnique({
+        where: { id: user.id }
+    })
+
+    if (!existingUser) return { error: "Foydalanuvchi topilmadi!" }
+
+    await db.scannedData.deleteMany({
+        where: {
+            user: {
+                id: existingUser.id
+            }
+        }
+    })
+    revalidatePath("/", 'page')
+    return { success: "Ro'yhat o'chirildi!" }
+}
