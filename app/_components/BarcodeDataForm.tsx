@@ -114,7 +114,7 @@ function BarcodeDataForm({ defaultBarcodeData }: Props) {
                                         placeholder='5'
                                         type='number'
                                         autoFocus
-                                        disabled={isPending || !!defaultBarcodeData.quantity}
+                                        disabled={isPending}
                                         onChange={(e) => field.onChange(e.target.value ? e.target.valueAsNumber : e.target.value)}
                                     />
                                 </FormControl>
