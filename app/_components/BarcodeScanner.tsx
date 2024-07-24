@@ -79,9 +79,9 @@ function BarcodeScanner({ }: Props) {
 
         if (openScannerModal) {
             html5QrCode.start({ facingMode: "environment" }, scanConfig, qrCodeSuccess, () => {
-                toast({
-                    title: "Skanerlab bo'lmayapti"
-                })
+                // toast({
+                //     title: "Skanerlab bo'lmayapti"
+                // })
             })
             setQrResult(defaultBarcodeData)
         } else {
