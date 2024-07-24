@@ -85,6 +85,7 @@ function InitialTable({ }: Props) {
                     } else
                         return { ...rowData, Muddati: excelDateToJSDate(rowData.Muddati) };
                 });
+
                 sourceDataAction({ excelColumns, excelData })
                 // setExcelData({ excelColumns, excelData });
             };
