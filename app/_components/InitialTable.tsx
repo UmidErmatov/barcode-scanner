@@ -37,11 +37,11 @@ import { deleteAllScannedDataAction, deleteScannedDataAction } from "@/actions/s
 import { deleteSourceData, sourceDataAction } from "@/actions/sourceData"
 import { SearchUser } from "./SearchUser"
 import ExportToExcel from "./ExportToExcel"
-import { useCurrentUser } from "@/hooks/use-current-user"
 import { commonDateFormat } from "@/utils/constants"
 import { ScannedData } from "@prisma/client"
 import { excelDateToJSDate, tableShelfLife } from "@/utils/functions"
 import { ConfirmDialog } from "@/components/Confirmation"
+import { useTelegram } from "@/components/providers/TelegramProvider"
 
 type Props = {
     // sourceData: SourceData | null,
@@ -51,6 +51,8 @@ type Props = {
 
 function InitialTable({ }: Props) {
     const [isPending, startTransition] = useTransition()
+    const { user, webApp } = useTelegram();
+    console.log("telegram user: ", user);
     const [currentProduct, setCurrentProduct] = useState<ScannedData | null>(null)
     const [tabContent, setOpenDialog, setTabContent] = useCommonStore(state => [state.tabContent, state.setOpenDialog, state.setTabContent])
     const fileInputRef = useRef<HTMLInputElement>(null);

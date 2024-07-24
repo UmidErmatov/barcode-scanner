@@ -13,11 +13,14 @@ import FormSuccess from '../form/form-success'
 import { loginAction } from '@/actions/login'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import { useTelegram } from '../providers/TelegramProvider'
 
 type Props = {}
 
 function LoginForm({ }: Props) {
     const searchParams = useSearchParams()
+    const { user, webApp } = useTelegram();
+    console.log("telegram user: ", user);
     const callbackUrl = searchParams.get('callbackUrl')
     const urlError = searchParams.get("error") === "OAuthAccountNotLinked" ? "Ushbu email avval ishlatilgan!" : ""
     const [showTwoFactor, setShowTwoFactor] = useState(false)

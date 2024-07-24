@@ -6,6 +6,7 @@ import { auth } from "@/auth";
 import { SessionProvider } from "next-auth/react";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/toaster";
+import { TelegramProvider } from "@/components/providers/TelegramProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,7 +32,9 @@ export default async function RootLayout({
             disableTransitionOnChange
           >
             <TooltipProvider>
-              {children}
+              <TelegramProvider>
+                {children}
+              </TelegramProvider>
               <Toaster />
             </TooltipProvider>
           </ThemeProvider>
