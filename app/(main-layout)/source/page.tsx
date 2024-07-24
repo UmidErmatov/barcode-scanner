@@ -1,10 +1,10 @@
+import SourceTable from "@/app/(main-layout)/source/_components/SourceTable";
 import { db } from "@/lib/db";
-import InitialTable from "../_components/InitialTable";
-import ScanModal from "../_components/ScanModal";
 import { currentUser } from "@/lib/serverAuth";
-import { TableStoreProvider } from "@/components/providers/TableStoreContext";
 
-export default async function MainPage() {
+type Props = {}
+
+async function SourcePage({ }: Props) {
     const user = await currentUser()
     if (!user) {
         return <div>Avtorizatsiyadan o&apos;tmagan</div>;
@@ -47,25 +47,12 @@ export default async function MainPage() {
         sourceData = myMourceData
     }
 
-    const scannedData = await db.scannedData.findMany({
-        where: { userId: user.id },
-        orderBy: { createdAt: "desc" }
-    })
-
     return (
-        <TableStoreProvider
-            excelData={sourceData}
-            currentData={scannedData}
-            employees={employees}
-        >
-            <div className="flex flex-col h-full">
-                <div className="flex-grow overflow-auto">
-                    <InitialTable />
-                </div>
-                <div className="flex-shrink-0 sm:hidden">
-                    <ScanModal />
-                </div>
-            </div>
-        </TableStoreProvider>
+        <div className="flex flex-col gap-8 items-center text-center justify-center">
+            Soon...
+            {/* <SourceTable excelData={sourceData} employees={employees} /> */}
+        </div>
     )
 }
+
+export default SourcePage

@@ -1,4 +1,3 @@
-import { Home, icons } from "lucide-react";
 
 export const navigation = [
     { name: 'Product', href: '#' },
@@ -8,27 +7,33 @@ export const navigation = [
 ],
     menuItems = [{
         link: "/",
-        title: "Dashboard",
-        icon: "home"
+        title: "Joriy",
+        icon: "squareCheck"
     },
     {
-        link: "/orders",
-        title: "Orders",
-        icon: "shoppingCart"
+        link: "/source",
+        title: "Manba",
+        icon: "source"
     },
-    {
-        link: "/products",
-        title: "Products",
-        icon: "package"
-    },
-    {
-        link: "/customers",
-        title: "Customers",
-        icon: "users2"
-    },
-    {
-        link: "/analytics",
-        title: "Analytics",
-        icon: "lineChart"
-    },],
+        // {
+        //     link: "/orders",
+        //     title: "Orders",
+        //     icon: "shoppingCart"
+        // },
+        // {
+        //     link: "/products",
+        //     title: "Products",
+        //     icon: "package"
+        // },
+        // {
+        //     link: "/customers",
+        //     title: "Customers",
+        //     icon: "users2"
+        // },
+        // {
+        //     link: "/analytics",
+        //     title: "Analytics",
+        //     icon: "lineChart"
+        // }
+    ],
     commonDateFormat = "dd.MM.yyyy"

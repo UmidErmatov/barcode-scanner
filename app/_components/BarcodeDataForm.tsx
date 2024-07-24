@@ -17,20 +17,12 @@ import { format } from "date-fns"
 import { useCommonStore } from "@/store/common";
 import { createScannedDataAction, updateScannedDataAction } from "@/actions/sannedData";
 import { commonDateFormat } from "@/utils/constants";
-import {
-    InputOTP,
-    InputOTPGroup,
-    InputOTPSeparator,
-    InputOTPSlot,
-} from "@/components/ui/input-otp"
-
 
 type Props = {
     defaultBarcodeData: z.infer<typeof UpdateBarcodeSchema>
 }
 
 function BarcodeDataForm({ defaultBarcodeData }: Props) {
-    console.log('defaultBarcodeData, ', defaultBarcodeData);
 
     const [openDialog, setOpenDialog, setOpenScannerModal] = useCommonStore(state => [state.openDialog, state.setOpenDialog, state.setOpenScannerModal])
     const [isPending, startTransition] = useTransition()

@@ -42,11 +42,8 @@ function ScanModal({ }: Props) {
                     <DrawerHeader>
                         <DrawerTitle>{scanModalHeader}</DrawerTitle>
                     </DrawerHeader>
-                    {/* <div className="p-4 pb-0 h-full"> */}
                     <BarcodeScanner />
-                    {/* </div> */}
                     <DrawerFooter>
-                        {/* <Button>Submit</Button> */}
                         <DrawerClose asChild>
                             <Button variant="outline">Bekor qilish</Button>
                         </DrawerClose>

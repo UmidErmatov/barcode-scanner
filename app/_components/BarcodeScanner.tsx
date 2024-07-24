@@ -28,8 +28,10 @@ function BarcodeScanner({ }: Props) {
     const [qrResult, setQrResult] = useState<DefaultBarcodeData>(defaultBarcodeData)
     const [openScannerModal, setScanModalHeader] = useCommonStore(state => [state.openScannerModal, state.setScanModalHeader])
     const excelData = useTableContext(state => state.excelData)
+
     const tableData = excelData && excelData.excelData && typeof excelData.excelData === 'object' &&
         Array.isArray(excelData.excelData) ? excelData.excelData as any[] : []
+
     useEffect(() => {
         const scanConfig: Html5QrcodeCameraScanConfig = {
             fps: 10,

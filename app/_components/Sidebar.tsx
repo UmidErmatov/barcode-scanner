@@ -6,12 +6,14 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip"
 import {
+    Database,
     Home,
     LineChart,
     Package,
     ScanBarcode,
     Settings,
     ShoppingCart,
+    SquareCheckBig,
     Users2,
 } from "lucide-react"
 import { usePathname } from 'next/navigation'
@@ -21,8 +23,9 @@ import { cn } from '@/lib/utils'
 type Props = {}
 
 export const menuItemIcons = {
-    home: <Home className="h-5 w-5" />,
+    squareCheck: <SquareCheckBig className="h-5 w-5" />,
     shoppingCart: <ShoppingCart className="h-5 w-5" />,
+    source: <Database className="h-5 w-5" />,
     package: <Package className="h-5 w-5" />,
     users2: <Users2 className="h-5 w-5" />,
     lineChart: <LineChart className="h-5 w-5" />

@@ -3,7 +3,6 @@ import { saveAs } from 'file-saver'
 import { utils, write } from 'xlsx';
 import { Button } from '@/components/ui/button';
 import { FileUp } from 'lucide-react';
-import { useCurrentUser } from '@/hooks/use-current-user';
 import { useTableContext } from '@/hooks/store-hooks/table-hook';
 import { format } from 'date-fns';
 import { commonDateFormat } from '@/utils/constants';
@@ -11,7 +10,6 @@ import { commonDateFormat } from '@/utils/constants';
 type Props = {}
 
 function ExportToExcel({ }: Props) {
-    const user = useCurrentUser()
     const currentData = useTableContext(state => state.currentData)
 
     const exportToExcel = () => {
