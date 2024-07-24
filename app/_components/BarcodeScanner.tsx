@@ -34,11 +34,12 @@ function BarcodeScanner({ }: Props) {
 
     useEffect(() => {
         const scanConfig: Html5QrcodeCameraScanConfig = {
-            fps: 10,
+            fps: 100,
             qrbox: {
-                width: 300,
+                width: 250,
                 height: 50,
             },
+
             // disableFlip: true,
             // aspectRatio: 5
         }
@@ -77,7 +78,11 @@ function BarcodeScanner({ }: Props) {
         }
 
         if (openScannerModal) {
-            html5QrCode.start({ facingMode: "environment" }, scanConfig, qrCodeSuccess, () => { })
+            html5QrCode.start({ facingMode: "environment" }, scanConfig, qrCodeSuccess, () => {
+                toast({
+                    title: "Skanerlab bo'lmayapti"
+                })
+            })
             setQrResult(defaultBarcodeData)
         } else {
             qrScannerStop()
