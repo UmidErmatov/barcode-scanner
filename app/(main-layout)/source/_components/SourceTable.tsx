@@ -9,7 +9,7 @@ import { excelDateToJSDate, tableShelfLife } from "@/utils/functions"
 import { SourceData, User } from "@prisma/client"
 import { FileDown, Trash } from "lucide-react"
 import { ChangeEvent, useRef, useState, useTransition } from "react"
-import { SearchUser } from '../../../_components/SearchUser'
+import { SearchUser } from '../../(current)/_components/SearchUser'
 
 type Props = {
     excelData: SourceData | null,

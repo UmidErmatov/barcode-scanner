@@ -1,7 +1,7 @@
 "use client"
 
 import { deleteAllScannedDataAction, deleteScannedDataAction } from "@/actions/sannedData"
-import { DrawerDialog } from "@/app/_components/UpdateDataModal"
+import { DrawerDialog } from "@/app/(main-layout)/(current)/_components/UpdateDataModal"
 import { ConfirmDialog } from "@/components/Confirmation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"

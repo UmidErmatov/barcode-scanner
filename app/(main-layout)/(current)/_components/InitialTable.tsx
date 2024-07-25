@@ -7,8 +7,8 @@ import {
 } from "@/components/ui/tabs"
 import { useCommonStore } from "@/store/common"
 import { useTableContext } from "@/hooks/store-hooks/table-hook"
-import SourceTable from "../(main-layout)/source/_components/SourceTable"
-import CurrentTable from "../(main-layout)/(current)/_components/CurrentTable"
+import SourceTable from "../../source/_components/SourceTable"
+import CurrentTable from "./CurrentTable"
 
 type Props = {
     // sourceData: SourceData | null,

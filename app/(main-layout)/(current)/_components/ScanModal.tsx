@@ -1,13 +1,4 @@
 "use client"
-import * as React from "react"
-import { MinusIcon, PlusIcon } from "@radix-ui/react-icons"
-// import dynamic from 'next/dynamic'
-// const BarcodeScanner = dynamic(() => {
-//     import('react-barcode-scanner/polyfill')
-//     return import('react-barcode-scanner').then(mod => mod.BarcodeScanner)
-// }, { ssr: false })
-
-// import { Bar, BarChart, ResponsiveContainer } from "recharts"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -20,13 +11,15 @@ import {
     DrawerTitle,
     DrawerTrigger,
 } from "@/components/ui/drawer"
-import { ScanBarcode } from "lucide-react"
+import { FilePen, Scan, ScanBarcode } from "lucide-react"
 import BarcodeScanner from "./BarcodeScanner"
 import { useCommonStore } from "@/store/common"
+import { useState } from "react"
 
 type Props = {}
 
 function ScanModal({ }: Props) {
+    const [isManual, setIsManual] = useState(false)
     const [openScannerModal, setOpenScannerModal, scanModalHeader, setScanModalHeader, tabContent] = useCommonStore(state => [state.openScannerModal, state.setOpenScannerModal, state.scanModalHeader, state.setScanModalHeader, state.tabContent])
 
     return (tabContent === "current" &&
@@ -35,17 +28,30 @@ function ScanModal({ }: Props) {
             setOpenScannerModal(value)
         }}>
             <DrawerTrigger asChild>
-                <Button className="w-full"> <ScanBarcode className="mr-2 h-4 w-4" />Scan</Button>
+                <Button className="w-full"> <ScanBarcode className="mr-2 h-4 w-4" />Skanerlash</Button>
             </DrawerTrigger>
             <DrawerContent>
                 <div className="mx-auto w-full h-full max-w-sm">
                     <DrawerHeader>
                         <DrawerTitle>{scanModalHeader}</DrawerTitle>
                     </DrawerHeader>
-                    <BarcodeScanner />
+                    {isManual ? <div>Qidirish</div> : <BarcodeScanner />}
                     <DrawerFooter>
+                        <Button onClick={() => {
+                            setScanModalHeader(!isManual ? "Qidirish" : "Skanerlanmoqda...")
+                            setIsManual(!isManual)
+                        }}>
+                            {isManual ? <><ScanBarcode className="mr-2 h-4 w-4" /> Skanerlash</> : <><FilePen className='h-4 w-4 mr-2' /> Qo'lda kiritish</>}
+                        </Button>
                         <DrawerClose asChild>
-                            <Button variant="outline">Bekor qilish</Button>
+                            <Button
+                                onClick={() => {
+                                    if (isManual)
+                                        setIsManual(false)
+                                }}
+                                variant="outline">
+                                Bekor qilish
+                            </Button>
                         </DrawerClose>
                     </DrawerFooter>
                 </div>

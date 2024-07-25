@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
-import InitialTable from "../../_components/InitialTable";
-import ScanModal from "../../_components/ScanModal";
+import InitialTable from "./_components/InitialTable";
+import ScanModal from "./_components/ScanModal";
 import { currentUser } from "@/lib/serverAuth";
 import { TableStoreProvider } from "@/components/providers/TableStoreContext";
 
