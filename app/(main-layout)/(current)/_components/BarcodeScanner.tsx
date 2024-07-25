@@ -2,7 +2,6 @@
 "use client"
 import { useCommonStore } from '@/store/common';
 // import { Html5Qrcode, Html5QrcodeCameraScanConfig } from 'html5-qrcode';
-// import { Scanner } from '@yudiel/react-qr-scanner';
 import { useEffect, useRef, useState } from 'react';
 import './codeScannerStyle.css'
 import BarcodeDataForm from './BarcodeDataForm';
