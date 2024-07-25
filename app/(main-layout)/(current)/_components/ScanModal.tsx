@@ -15,6 +15,7 @@ import { FilePen, Scan, ScanBarcode } from "lucide-react"
 import BarcodeScanner from "./BarcodeScanner"
 import { useCommonStore } from "@/store/common"
 import { useState } from "react"
+import { DialogDescription } from "@/components/ui/dialog"
 
 type Props = {}
 
@@ -24,7 +25,7 @@ function ScanModal({ }: Props) {
 
     return (tabContent === "current" &&
         <Drawer open={openScannerModal} onOpenChange={(value) => {
-            setScanModalHeader("Skanerlanmoqda...")
+            setScanModalHeader("Skanerlang")
             setOpenScannerModal(value)
         }}>
             <DrawerTrigger asChild>
@@ -37,12 +38,12 @@ function ScanModal({ }: Props) {
                     </DrawerHeader>
                     {isManual ? <div>Qidirish</div> : <BarcodeScanner />}
                     <DrawerFooter>
-                        <Button onClick={() => {
+                        {/* <Button onClick={() => {
                             setScanModalHeader(!isManual ? "Qidirish" : "Skanerlanmoqda...")
                             setIsManual(!isManual)
                         }}>
                             {isManual ? <><ScanBarcode className="mr-2 h-4 w-4" /> Skanerlash</> : <><FilePen className='h-4 w-4 mr-2' /> Qo'lda kiritish</>}
-                        </Button>
+                        </Button> */}
                         <DrawerClose asChild>
                             <Button
                                 onClick={() => {

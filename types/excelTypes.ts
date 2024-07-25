@@ -1,7 +1,7 @@
 import { BarcodeSchema } from '@/schemas';
 import * as z from 'zod'
-export interface Obj { [key: string]: any }
-export interface ExcelRowData extends Obj {
+export interface IObj { [key: string]: any }
+export interface ExcelRowData extends IObj {
     Barcode: string;
     Nomi: string;
     Miqdori: number;

@@ -108,9 +108,10 @@ function BarcodeDataForm({ defaultBarcodeData }: Props) {
                                 <FormControl>
                                     <Input
                                         {...field}
-                                        placeholder='5'
+                                        placeholder='Miqdorini kiriting'
                                         type='number'
                                         autoFocus
+                                        maxLength={100}
                                         disabled={isPending}
                                         onChange={(e) => field.onChange(e.target.value ? e.target.valueAsNumber : e.target.value)}
                                     />
@@ -147,14 +148,13 @@ function BarcodeDataForm({ defaultBarcodeData }: Props) {
                                 <FormControl>
                                     <Popover>
                                         <PopoverTrigger asChild>
-                                            {/* <FormControl> */}
                                             <Button
                                                 variant={"outline"}
                                                 className={cn(
                                                     "w-full text-left font-normal",
                                                     !field.value && "text-muted-foreground"
                                                 )}
-                                                disabled={isPending || new Date(defaultBarcodeData.shelfLife) !== new Date()}
+                                                disabled={isPending || format(defaultBarcodeData.shelfLife, commonDateFormat) !== format(new Date(), commonDateFormat)}
                                             >
                                                 {field.value ? (
                                                     format(field.value, commonDateFormat)
@@ -163,7 +163,6 @@ function BarcodeDataForm({ defaultBarcodeData }: Props) {
                                                 )}
                                                 <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                             </Button>
-                                            {/* </FormControl> */}
                                         </PopoverTrigger>
                                         <PopoverContent className="w-auto p-0" align="start">
                                             <Calendar

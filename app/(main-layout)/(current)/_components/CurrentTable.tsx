@@ -14,6 +14,7 @@ import { DotsHorizontalIcon } from "@radix-ui/react-icons"
 import { format } from "date-fns"
 import { Pencil, Trash } from "lucide-react"
 import { useState, useTransition } from "react"
+import ExportToExcel from "./ExportToExcel"
 
 type Props = {
     currentData: ScannedData[]
@@ -21,7 +22,7 @@ type Props = {
 
 function CurrentTable({ currentData }: Props) {
     const [isPending, startTransition] = useTransition()
-    const [currentProduct, setCurrentProduct] = useState<ScannedData | null>(null)
+    const setCurrentProduct = useCommonStore(state => state.setCurrentProduct)
     const setOpenDialog = useCommonStore(state => state.setOpenDialog)
 
     const deleteCurrentProduct = (id: string) => {
@@ -40,6 +41,7 @@ function CurrentTable({ currentData }: Props) {
                     <span className="flex items-center">
                         Kiritilgan mahsulotlar ro'yhati
                     </span>
+                    <ExportToExcel />
                     <ConfirmDialog
                         saveText="Ha"
                         cancelText="Yo'q"
@@ -107,7 +109,7 @@ function CurrentTable({ currentData }: Props) {
                                 <TableCell>{product.manufacturer}</TableCell>
                                 <TableCell>{product.buyPrice}</TableCell>
                                 <TableCell>
-                                    <DrawerDialog product={currentProduct} />
+                                    <DrawerDialog />
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
                                             <Button variant="ghost" className="h-8 w-8 p-0">

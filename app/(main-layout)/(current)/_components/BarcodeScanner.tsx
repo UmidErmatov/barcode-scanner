@@ -1,22 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 import { useCommonStore } from '@/store/common';
-import { Html5Qrcode, Html5QrcodeCameraScanConfig } from 'html5-qrcode';
-import { Scanner } from '@yudiel/react-qr-scanner';
+// import { Html5Qrcode, Html5QrcodeCameraScanConfig } from 'html5-qrcode';
+// import { Scanner } from '@yudiel/react-qr-scanner';
 import { useEffect, useRef, useState } from 'react';
 import './codeScannerStyle.css'
 import BarcodeDataForm from './BarcodeDataForm';
-import { cn } from '@/lib/utils';
 import { DefaultBarcodeData } from '@/types/excelTypes';
 import { useTableContext } from '@/hooks/store-hooks/table-hook';
-import { useToast } from "@/components/ui/use-toast"
+import Lottie from 'lottie-react'
+import Scanner from '@/public/scanner.json'
 
-type Props = {}
-
-function BarcodeScanner({ }: Props) {
-    const { toast } = useToast()
-    const audioRef = useRef<HTMLAudioElement | null>(null);
-
+function BarcodeScanner() {
+    const [barcode, setBarcode] = useState('');
+    const inputRef = useRef<HTMLInputElement>(null);
+    // const [isEnabled, setIsEnabled] = useState(true);
     const defaultBarcodeData: DefaultBarcodeData = {
         barcode: "",
         name: "",
@@ -27,8 +25,8 @@ function BarcodeScanner({ }: Props) {
         buyPrice: 0,
     }
     const [qrResult, setQrResult] = useState<DefaultBarcodeData>(defaultBarcodeData)
-    const [openScannerModal, setScanModalHeader] = useCommonStore(state => [state.openScannerModal, state.setScanModalHeader])
-    const excelData = useTableContext(state => state.excelData)
+    const [openScannerModal, setOpenScannerModal, setScanModalHeader, setOpenDialog, setCurrentProduct] = useCommonStore(state => [state.openScannerModal, state.setOpenScannerModal, state.setScanModalHeader, state.setOpenDialog, state.setCurrentProduct])
+    const [excelData, currentData] = useTableContext(state => [state.excelData, state.currentData])
 
     const tableData = excelData && excelData.excelData && typeof excelData.excelData === 'object' &&
         Array.isArray(excelData.excelData) ? excelData.excelData as any[] : []
@@ -40,11 +38,11 @@ function BarcodeScanner({ }: Props) {
     //             width: 250,
     //             height: 50,
     //         },
-
     //         // disableFlip: true,
     //         // aspectRatio: 5
     //     }
     //     const html5QrCode = new Html5Qrcode("qrCodeContainer")
+
 
     //     const qrScannerStop = () => {
     //         if (html5QrCode && html5QrCode.isScanning) {
@@ -94,11 +92,60 @@ function BarcodeScanner({ }: Props) {
     //     }
     // }, [openScannerModal])
 
+    useEffect(() => {
+        if (openScannerModal && inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, [openScannerModal]);
+
+    const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setBarcode(event.target.value);
+    };
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            setBarcode('');
+            // You can process the barcode data here
+            const findCurrentData = currentData.find(item => item?.barcode?.toString()?.split(",")?.map((code: string) => code.trim())?.includes(barcode))
+
+            if (findCurrentData) {
+                setCurrentProduct(findCurrentData)
+                setOpenDialog(true)
+                setOpenScannerModal(false)
+                return
+            }
+
+            const findProduct = tableData.find(excelProduct => excelProduct?.Barcode?.toString()?.split(",")?.map((code: string) => code.trim())?.includes(barcode))
+            if (findProduct) {
+                // qrScannerStop()
+                setScanModalHeader("Ma'lumotlar")
+                setQrResult(findProduct ? { barcode: findProduct.Barcode.toString(), name: findProduct.Nomi, quantity: +findProduct.Miqdori, shelfLife: new Date(findProduct.Muddati), manufacturer: findProduct['Ishlab chiqaruvchi'], buyPrice: findProduct['Tan narxi'] } : { ...defaultBarcodeData, barcode: barcode })
+                return;
+            }
+
+            setQrResult({ ...qrResult, barcode })
+            // setIsEnabled(false);
+        }
+    };
+
     return (
         <div className='px-4'>
-            <audio ref={audioRef} src="/scanner-beep.mp3" preload="auto" hidden />
-            {/* <Scanner onScan={(result) => console.log(result)} formats={['aztec', 'codabar', 'code_128', 'code_39', 'data_matrix', 'databar', 'databar_expanded', 'dx_film_edge', 'ean_13', 'ean_8', 'qr_code', 'itf', 'linear_codes', 'matrix_codes', 'maxi_code', 'micro_qr_code', 'pdf417', 'rm_qr_code', 'unknown', 'upc_a', 'upc_e']} /> */}
-            <div id='qrCodeContainer' className={cn(qrResult.barcode ? 'hidden' : '')} />
+            {!qrResult.barcode && (
+                <>
+                    <input
+                        ref={inputRef}
+                        type="text"
+                        value={barcode}
+                        autoFocus
+                        onChange={handleInput}
+                        onKeyDown={handleKeyDown}
+                        className='opacity-0 w-0 h-0'
+                    />
+                    <Lottie animationData={Scanner} loop />
+                </>
+            )}
+
             {qrResult.barcode && <BarcodeDataForm defaultBarcodeData={{ ...qrResult, id: "" }} />}
         </div>
     )

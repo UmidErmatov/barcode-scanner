@@ -16,15 +16,14 @@ import {
 import { useCommonStore } from "@/store/common"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import BarcodeDataForm from "./BarcodeDataForm"
-import { ScannedData } from "@prisma/client"
 
 type Props = {
-    product: ScannedData | null
+    // product: ScannedData | null
 }
 
-export function DrawerDialog({ product }: Props) {
+export function DrawerDialog({ }: Props) {
 
-    const [openDialog, setOpenDialog] = useCommonStore(state => [state.openDialog, state.setOpenDialog])
+    const [openDialog, setOpenDialog, currentProduct] = useCommonStore(state => [state.openDialog, state.setOpenDialog, state.currentProduct])
     const isDesktop = useMediaQuery("(min-width: 768px)")
     // console.log("product: ", product);
 
@@ -37,7 +36,7 @@ export function DrawerDialog({ product }: Props) {
                             <DrawerTitle>Tahrirlash</DrawerTitle>
                         </DrawerHeader>
                         {/* <div className="p-4 pb-0 h-full"> */}
-                        {product ? <BarcodeDataForm defaultBarcodeData={product} /> : "Mahsulot mavjud emas!"}
+                        {currentProduct ? <BarcodeDataForm defaultBarcodeData={currentProduct} /> : "Mahsulot mavjud emas!"}
                         {/* </div> */}
                         <DrawerFooter className="px-0">
                             <DrawerClose asChild>
@@ -57,10 +56,10 @@ export function DrawerDialog({ product }: Props) {
                     <DrawerHeader>
                         <DrawerTitle>Tahrirlash</DrawerTitle>
                     </DrawerHeader>
-                    {/* <div className="p-4 pb-0 h-full"> */}
-                    {product ? <BarcodeDataForm defaultBarcodeData={product} /> : "Mahsulot mavjud emas!"}
-                    {/* </div> */}
-                    <DrawerFooter className="px-0">
+                    <div className="px-4">
+                        {currentProduct ? <BarcodeDataForm defaultBarcodeData={currentProduct} /> : "Mahsulot mavjud emas!"}
+                    </div>
+                    <DrawerFooter className="px-4">
                         <DrawerClose asChild>
                             <Button variant="outline">Bekor qilish</Button>
                         </DrawerClose>
