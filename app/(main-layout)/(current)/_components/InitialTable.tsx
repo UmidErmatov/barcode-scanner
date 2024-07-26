@@ -9,6 +9,7 @@ import { useCommonStore } from "@/store/common"
 import { useTableContext } from "@/hooks/store-hooks/table-hook"
 import SourceTable from "../../source/_components/SourceTable"
 import CurrentTable from "./CurrentTable"
+import ScanModal from "./ScanModal"
 
 type Props = {
     // sourceData: SourceData | null,
@@ -22,10 +23,15 @@ function InitialTable({ }: Props) {
 
     return (
         <Tabs defaultValue={tabContent} onValueChange={value => setTabContent(value)}>
-            <TabsList>
-                <TabsTrigger value="source">Manba</TabsTrigger>
-                <TabsTrigger value="current">Joriy</TabsTrigger>
-            </TabsList>
+            <div className="flex items-center">
+                <TabsList>
+                    <TabsTrigger value="source">Manba</TabsTrigger>
+                    <TabsTrigger value="current">Joriy</TabsTrigger>
+                </TabsList>
+                <div className="ml-auto flex items-center gap-2">
+                    <ScanModal />
+                </div>
+            </div>
             <TabsContent value="source">
                 <SourceTable excelData={excelData} employees={employees} />
             </TabsContent>

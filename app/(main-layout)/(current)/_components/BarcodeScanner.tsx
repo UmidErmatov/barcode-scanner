@@ -9,11 +9,11 @@ import { DefaultBarcodeData } from '@/types/excelTypes';
 import { useTableContext } from '@/hooks/store-hooks/table-hook';
 import Lottie from 'lottie-react'
 import Scanner from '@/public/scanner.json'
+import { useToast } from '@/components/ui/use-toast';
 
 function BarcodeScanner() {
-    const [barcode, setBarcode] = useState('');
-    const inputRef = useRef<HTMLInputElement>(null);
-    // const [isEnabled, setIsEnabled] = useState(true);
+    const { toast } = useToast()
+
     const defaultBarcodeData: DefaultBarcodeData = {
         barcode: "",
         name: "",
@@ -23,6 +23,7 @@ function BarcodeScanner() {
         manufacturer: "",
         buyPrice: 0,
     }
+
     const [qrResult, setQrResult] = useState<DefaultBarcodeData>(defaultBarcodeData)
     const [openScannerModal, setOpenScannerModal, setScanModalHeader, setOpenDialog, setCurrentProduct] = useCommonStore(state => [state.openScannerModal, state.setOpenScannerModal, state.setScanModalHeader, state.setOpenDialog, state.setCurrentProduct])
     const [excelData, currentData] = useTableContext(state => [state.excelData, state.currentData])
@@ -30,123 +31,98 @@ function BarcodeScanner() {
     const tableData = excelData && excelData.excelData && typeof excelData.excelData === 'object' &&
         Array.isArray(excelData.excelData) ? excelData.excelData as any[] : []
 
-    // useEffect(() => {
-    //     const scanConfig: Html5QrcodeCameraScanConfig = {
-    //         fps: 100,
-    //         qrbox: {
-    //             width: 250,
-    //             height: 50,
-    //         },
-    //         // disableFlip: true,
-    //         // aspectRatio: 5
-    //     }
-    //     const html5QrCode = new Html5Qrcode("qrCodeContainer")
-
-
-    //     const qrScannerStop = () => {
-    //         if (html5QrCode && html5QrCode.isScanning) {
-    //             html5QrCode.stop()
-    //                 .then(() => {
-    //                     console.log("Scanner stopped");
-    //                 })
-    //                 .catch(() => {
-    //                     console.log("Scanner error");
-    //                 })
-    //         }
-    //     }
-
-    //     const qrCodeSuccess = (result: string) => {
-    //         if (audioRef.current) {
-    //             audioRef.current.currentTime = 0;
-    //             audioRef.current.play();
-    //         }
-
-    //         const findProduct = tableData.find(excelProduct => excelProduct?.Barcode?.toString()?.split(",")?.map((code: string) => code.trim())?.includes(result))
-    //         if (findProduct) {
-    //             qrScannerStop()
-    //             setScanModalHeader("Ma'lumotlar")
-    //             setQrResult(findProduct ? { barcode: findProduct.Barcode.toString(), name: findProduct.Nomi, quantity: +findProduct.Miqdori, shelfLife: new Date(findProduct.Muddati), manufacturer: findProduct['Ishlab chiqaruvchi'], buyPrice: findProduct['Tan narxi'] } : { ...defaultBarcodeData, barcode: result })
-    //         } else {
-    //             toast({
-    //                 title: "Qutiga tashlang!",
-    //                 variant: 'destructive'
-    //             })
-    //             return
-    //         }
-    //     }
-
-    //     if (openScannerModal) {
-    //         html5QrCode.start({ facingMode: "environment" }, scanConfig, qrCodeSuccess, () => {
-    //             // toast({
-    //             //     title: "Skanerlab bo'lmayapti"
-    //             // })
-    //         })
-    //         setQrResult(defaultBarcodeData)
-    //     } else {
-    //         qrScannerStop()
-    //     }
-
-    //     return () => {
-    //         qrScannerStop()
-    //     }
-    // }, [openScannerModal])
-
     useEffect(() => {
-        if (openScannerModal && inputRef.current) {
-            inputRef.current.focus();
+        var barcode = ''
+        const handleKeyPress = (event: KeyboardEvent) => {
+            if (openScannerModal) {
+                if (isNaN(+event.key) && event.key !== 'Backspace') {
+                    event.preventDefault();
+                }
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+
+                    const findCurrentData = currentData.find(item => item?.barcode?.toString()?.split(",")?.map((code: string) => code.trim())?.includes(barcode))
+                    if (findCurrentData) {
+                        setCurrentProduct(findCurrentData)
+                        setOpenDialog(true)
+                        setOpenScannerModal(false)
+                        window.removeEventListener('keydown', handleKeyPress);
+                        barcode = ''
+                        return
+                    }
+
+                    const findProduct = tableData.find(excelProduct => excelProduct?.Barcode?.toString()?.split(",")?.map((code: string) => code.trim())?.includes(barcode))
+                    if (findProduct) {
+                        setScanModalHeader("Ma'lumotlar")
+                        setQrResult(findProduct ? { barcode: findProduct.Barcode.toString(), name: findProduct.Nomi, quantity: +findProduct.Miqdori, shelfLife: new Date(findProduct.Muddati), manufacturer: findProduct['Ishlab chiqaruvchi'], buyPrice: findProduct['Tan narxi'] } : { ...defaultBarcodeData, barcode: barcode })
+                        window.removeEventListener('keydown', handleKeyPress);
+                        barcode = ''
+                        return;
+                    }
+
+                    if (tableData.length && currentData.length) {
+                        toast({
+                            title: "Qutiga tashlang!",
+                            variant: 'destructive'
+                        })
+                        window.removeEventListener('keydown', handleKeyPress);
+                        barcode = ''
+                        return;
+                    }
+
+                    setQrResult({ ...qrResult, barcode })
+                    window.removeEventListener('keydown', handleKeyPress);
+                } else {
+                    barcode = barcode + event.key
+                }
+            }
+        };
+
+        if (!qrResult.barcode) {
+            window.addEventListener('keydown', handleKeyPress);
         }
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyPress);
+            barcode = ''
+        };
     }, [openScannerModal]);
 
-    const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setBarcode(event.target.value);
-    };
 
-    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            setBarcode('');
-            // You can process the barcode data here
-            const findCurrentData = currentData.find(item => item?.barcode?.toString()?.split(",")?.map((code: string) => code.trim())?.includes(barcode))
+    // const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    //     if (event.key === 'Enter') {
+    //         event.preventDefault();
+    //         setBarcode('');
+    //         // You can process the barcode data here
+    //         const findCurrentData = currentData.find(item => item?.barcode?.toString()?.split(",")?.map((code: string) => code.trim())?.includes(barcode))
 
-            if (findCurrentData) {
-                setCurrentProduct(findCurrentData)
-                setOpenDialog(true)
-                setOpenScannerModal(false)
-                return
-            }
+    //         if (findCurrentData) {
+    //             setCurrentProduct(findCurrentData)
+    //             setOpenDialog(true)
+    //             setOpenScannerModal(false)
+    //             return
+    //         }
 
-            const findProduct = tableData.find(excelProduct => excelProduct?.Barcode?.toString()?.split(",")?.map((code: string) => code.trim())?.includes(barcode))
-            if (findProduct) {
-                // qrScannerStop()
-                setScanModalHeader("Ma'lumotlar")
-                setQrResult(findProduct ? { barcode: findProduct.Barcode.toString(), name: findProduct.Nomi, quantity: +findProduct.Miqdori, shelfLife: new Date(findProduct.Muddati), manufacturer: findProduct['Ishlab chiqaruvchi'], buyPrice: findProduct['Tan narxi'] } : { ...defaultBarcodeData, barcode: barcode })
-                return;
-            }
+    //         const findProduct = tableData.find(excelProduct => excelProduct?.Barcode?.toString()?.split(",")?.map((code: string) => code.trim())?.includes(barcode))
+    //         if (findProduct) {
+    //             // qrScannerStop()
+    //             setScanModalHeader("Ma'lumotlar")
+    //             setQrResult(findProduct ? { barcode: findProduct.Barcode.toString(), name: findProduct.Nomi, quantity: +findProduct.Miqdori, shelfLife: new Date(findProduct.Muddati), manufacturer: findProduct['Ishlab chiqaruvchi'], buyPrice: findProduct['Tan narxi'] } : { ...defaultBarcodeData, barcode: barcode })
+    //             return;
+    //         }
 
-            setQrResult({ ...qrResult, barcode })
-            // setIsEnabled(false);
-        }
-    };
+    //         setQrResult({ ...qrResult, barcode })
+    //         // setIsEnabled(false);
+    //     }
+    // };
 
     return (
-        <div className='px-4'>
+        <>
             {!qrResult.barcode && (
-                <>
-                    <input
-                        ref={inputRef}
-                        type="text"
-                        value={barcode}
-                        autoFocus
-                        onChange={handleInput}
-                        onKeyDown={handleKeyDown}
-                        className='opacity-0 w-0 h-0'
-                    />
-                    <Lottie animationData={Scanner} loop />
-                </>
+                <Lottie animationData={Scanner} loop />
             )}
-
             {qrResult.barcode && <BarcodeDataForm defaultBarcodeData={{ ...qrResult, id: "" }} />}
-        </div>
+        </>
     )
 }
 

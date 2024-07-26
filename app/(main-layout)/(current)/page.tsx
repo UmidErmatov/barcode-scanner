@@ -59,12 +59,12 @@ export default async function MainPage() {
             employees={employees}
         >
             <div className="flex flex-col h-full">
-                <div className="flex-grow overflow-auto">
-                    <InitialTable />
-                </div>
-                <div className="flex-shrink-0 sm:hidden">
+                {/* <div className="flex-grow overflow-auto"> */}
+                <InitialTable />
+                {/* </div> */}
+                {/* <div className="flex-shrink-0 sm:hidden">
                     <ScanModal />
-                </div>
+                </div> */}
             </div>
         </TableStoreProvider>
     )

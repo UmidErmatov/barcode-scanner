@@ -31,18 +31,16 @@ export function DrawerDialog({ }: Props) {
         return (
             <Dialog open={openDialog} onOpenChange={setOpenDialog}>
                 <DialogContent className="sm:max-w-[425px]">
-                    <div className="mx-auto w-full h-full max-w-sm">
+                    <div className="mx-auto w-full h-full max-w-sm mb-4">
                         <DrawerHeader>
                             <DrawerTitle>Tahrirlash</DrawerTitle>
                         </DrawerHeader>
-                        {/* <div className="p-4 pb-0 h-full"> */}
                         {currentProduct ? <BarcodeDataForm defaultBarcodeData={currentProduct} /> : "Mahsulot mavjud emas!"}
-                        {/* </div> */}
-                        <DrawerFooter className="px-0">
+                        {/* <DrawerFooter className="px-0">
                             <DrawerClose asChild>
                                 <Button variant="outline">Bekor qilish</Button>
                             </DrawerClose>
-                        </DrawerFooter>
+                        </DrawerFooter> */}
                     </div>
                 </DialogContent>
             </Dialog>
@@ -52,18 +50,18 @@ export function DrawerDialog({ }: Props) {
     return (
         <Drawer open={openDialog} onOpenChange={value => setOpenDialog(value)}>
             <DrawerContent>
-                <div className="mx-auto w-full h-full max-w-sm">
+                <div className="mx-auto w-full h-full max-w-sm  mb-4">
                     <DrawerHeader>
                         <DrawerTitle>Tahrirlash</DrawerTitle>
                     </DrawerHeader>
                     <div className="px-4">
                         {currentProduct ? <BarcodeDataForm defaultBarcodeData={currentProduct} /> : "Mahsulot mavjud emas!"}
                     </div>
-                    <DrawerFooter className="px-4">
+                    {/* <DrawerFooter className="px-4">
                         <DrawerClose asChild>
                             <Button variant="outline">Bekor qilish</Button>
                         </DrawerClose>
-                    </DrawerFooter>
+                    </DrawerFooter> */}
                 </div>
             </DrawerContent>
         </Drawer>
