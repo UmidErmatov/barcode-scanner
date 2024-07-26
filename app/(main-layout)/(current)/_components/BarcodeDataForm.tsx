@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { useForm } from "react-hook-form"
 import * as z from 'zod'
@@ -44,7 +45,10 @@ function BarcodeDataForm({ defaultBarcodeData }: Props) {
         }
 
         window.visualViewport?.addEventListener('resize', updateViewportHeight);
-        return () => window.visualViewport?.removeEventListener('resize', updateViewportHeight);
+        return () => {
+            window.visualViewport?.removeEventListener('resize', updateViewportHeight)
+            form.reset()
+        }
     }, []);
 
     const onSubmit = (values: z.infer<typeof BarcodeSchema>) => {
@@ -244,6 +248,9 @@ function BarcodeDataForm({ defaultBarcodeData }: Props) {
                         className='w-full'
                         variant={'outline'}
                         disabled={isPending}
+                        onClick={() => {
+                            setOpenScannerModal(false)
+                        }}
                     >
                         Bekor qilish
                     </Button>

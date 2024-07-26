@@ -40,6 +40,7 @@ function BarcodeScanner() {
                 }
                 if (event.key === 'Enter') {
                     event.preventDefault();
+                    setScanModalHeader("Ma'lumotlar")
 
                     const findCurrentData = currentData.find(item => item?.barcode?.toString()?.split(",")?.map((code: string) => code.trim())?.includes(barcode))
                     if (findCurrentData) {
@@ -53,7 +54,6 @@ function BarcodeScanner() {
 
                     const findProduct = tableData.find(excelProduct => excelProduct?.Barcode?.toString()?.split(",")?.map((code: string) => code.trim())?.includes(barcode))
                     if (findProduct) {
-                        setScanModalHeader("Ma'lumotlar")
                         setQrResult(findProduct ? { barcode: findProduct.Barcode.toString(), name: findProduct.Nomi, quantity: +findProduct.Miqdori, shelfLife: new Date(findProduct.Muddati), manufacturer: findProduct['Ishlab chiqaruvchi'], buyPrice: findProduct['Tan narxi'] } : { ...defaultBarcodeData, barcode: barcode })
                         window.removeEventListener('keydown', handleKeyPress);
                         barcode = ''

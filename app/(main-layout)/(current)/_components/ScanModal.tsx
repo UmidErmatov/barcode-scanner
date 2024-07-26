@@ -24,18 +24,6 @@ function ScanModal({ }: Props) {
 
     const [isManual, setIsManual] = useState(false)
     const [openScannerModal, setOpenScannerModal, scanModalHeader, setScanModalHeader, tabContent] = useCommonStore(state => [state.openScannerModal, state.setOpenScannerModal, state.scanModalHeader, state.setScanModalHeader, state.tabContent])
-    const [viewportHeight, setViewportHeight] = useState(window.visualViewport?.height);
-
-    useEffect(() => {
-        function updateViewportHeight() {
-            console.log("window.visualViewport: ", window.visualViewport);
-
-            setViewportHeight(window.visualViewport?.height || 0);
-        }
-
-        window.visualViewport?.addEventListener('resize', updateViewportHeight);
-        return () => window.visualViewport?.removeEventListener('resize', updateViewportHeight);
-    }, []);
 
     return (tabContent === "current" &&
         <>
@@ -82,7 +70,7 @@ function ScanModal({ }: Props) {
                 <SheetTrigger asChild>
                     <Button className="w-full" size={'sm'}> <ScanBarcode className="mr-2 h-4 w-4" />Skanerlash</Button>
                 </SheetTrigger>
-                <ScrollArea style={{ height: `${window.innerHeight > (viewportHeight || 0) ? 20 : 100}%` }}>
+                <ScrollArea className='overflow-x-auto'>
                     <SheetContent side='top'>
                         <div className="mx-auto w-full h-full max-w-sm">
                             <SheetHeader>
