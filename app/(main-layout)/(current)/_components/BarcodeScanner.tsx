@@ -151,10 +151,10 @@ function BarcodeScanner() {
 
     return (
         <>
-            {!qrResult.barcode && (
-                // <Lottie animationData={Scanner} loop />
-                <div id='qrCodeContainer' className={cn(qrResult.barcode ? 'hidden' : '')} />
-            )}
+            {/* {!qrResult.barcode && (
+                <Lottie animationData={Scanner} loop /> */}
+            <div id='qrCodeContainer' className={cn(qrResult.barcode ? 'hidden' : '')} />
+            {/* )} */}
             {qrResult.barcode && <BarcodeDataForm defaultBarcodeData={{ ...qrResult, id: "" }} />}
         </>
     )
