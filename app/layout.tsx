@@ -6,6 +6,7 @@ import { auth } from "@/auth";
 import { SessionProvider } from "next-auth/react";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/toaster";
+import CheckConnection from "@/components/providers/CheckConnection";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -37,7 +38,9 @@ export default async function RootLayout({
             disableTransitionOnChange
           >
             <TooltipProvider>
-              {children}
+              <CheckConnection >
+                {children}
+              </CheckConnection>
               <Toaster />
             </TooltipProvider>
           </ThemeProvider>
