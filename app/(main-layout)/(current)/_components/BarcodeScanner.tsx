@@ -59,31 +59,33 @@ function BarcodeScanner() {
 
         const qrCodeSuccess = (result: string) => {
 
-            const findCurrentData = currentData.find(item => item?.barcode?.toString()?.split(",")?.map((code: string) => code.trim())?.includes(barcode))
-            if (findCurrentData) {
-                setCurrentProduct(findCurrentData)
-                setOpenDialog(true)
-                setOpenScannerModal(false)
-                return
-            }
+            if (!qrResult.barcode) {
+                const findCurrentData = currentData.find(item => item?.barcode?.toString()?.split(",")?.map((code: string) => code.trim())?.includes(result))
+                if (findCurrentData) {
+                    setCurrentProduct(findCurrentData)
+                    setOpenDialog(true)
+                    setOpenScannerModal(false)
+                    return
+                }
 
-            const findProduct = tableData.find(excelProduct => excelProduct?.Barcode?.toString()?.split(",")?.map((code: string) => code.trim())?.includes(barcode))
-            if (findProduct) {
-                setQrResult(findProduct ? { barcode: findProduct.Barcode.toString(), name: findProduct.Nomi, quantity: +findProduct.Miqdori, shelfLife: new Date(findProduct.Muddati), manufacturer: findProduct['Ishlab chiqaruvchi'], buyPrice: findProduct['Tan narxi'] } : { ...defaultBarcodeData, barcode: barcode })
-                return;
-            }
+                const findProduct = tableData.find(excelProduct => excelProduct?.Barcode?.toString()?.split(",")?.map((code: string) => code.trim())?.includes(result))
+                if (findProduct) {
+                    setQrResult(findProduct ? { barcode: findProduct.Barcode.toString(), name: findProduct.Nomi, quantity: +findProduct.Miqdori, shelfLife: new Date(findProduct.Muddati), manufacturer: findProduct['Ishlab chiqaruvchi'], buyPrice: findProduct['Tan narxi'] } : { ...defaultBarcodeData, barcode: result })
+                    return;
+                }
 
-            if (tableData.length && currentData.length) {
-                toast({
-                    title: "Qutiga tashlang!",
-                    variant: 'destructive'
-                })
-                return;
-            }
+                if (tableData.length && currentData.length) {
+                    toast({
+                        title: "Qutiga tashlang!",
+                        variant: 'destructive'
+                    })
+                    return;
+                }
 
-            qrScannerStop()
-            setScanModalHeader("Ma'lumotlar")
-            setQrResult(findProduct ? { barcode: findProduct.Barcode.toString(), name: findProduct.Nomi, quantity: +findProduct.Miqdori, shelfLife: new Date(findProduct.Muddati), manufacturer: findProduct['Ishlab chiqaruvchi'], buyPrice: findProduct['Tan narxi'] } : { ...defaultBarcodeData, barcode: result })
+                qrScannerStop()
+                setScanModalHeader("Ma'lumotlar")
+                setQrResult(findProduct ? { barcode: findProduct.Barcode.toString(), name: findProduct.Nomi, quantity: +findProduct.Miqdori, shelfLife: new Date(findProduct.Muddati), manufacturer: findProduct['Ishlab chiqaruvchi'], buyPrice: findProduct['Tan narxi'] } : { ...defaultBarcodeData, barcode: result })
+            }
         }
 
         if (openScannerModal) {
@@ -94,7 +96,7 @@ function BarcodeScanner() {
         }
 
         const handleKeyPress = (event: KeyboardEvent) => {
-            if (openScannerModal) {
+            if (openScannerModal && !qrResult.barcode) {
                 if (isNaN(+event.key) && event.key !== 'Backspace') {
                     event.preventDefault();
                 }
