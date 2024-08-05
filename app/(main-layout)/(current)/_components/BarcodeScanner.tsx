@@ -7,13 +7,14 @@ import './codeScannerStyle.css'
 import BarcodeDataForm from './BarcodeDataForm';
 import { DefaultBarcodeData } from '@/types/excelTypes';
 import { useTableContext } from '@/hooks/store-hooks/table-hook';
-import Lottie from 'lottie-react'
-import Scanner from '@/public/scanner.json'
+// import Lottie from 'lottie-react'
+// import Scanner from '@/public/scanner.json'
 import { useToast } from '@/components/ui/use-toast';
 import { cn } from '@/lib/utils';
 
 function BarcodeScanner() {
     const { toast } = useToast()
+    const audioRef = useRef<HTMLAudioElement | null>(null);
 
     const defaultBarcodeData: DefaultBarcodeData = {
         barcode: "",
@@ -60,17 +61,24 @@ function BarcodeScanner() {
         const qrCodeSuccess = (result: string) => {
 
             if (!qrResult.barcode) {
+
+                if (audioRef.current) {
+                    audioRef.current.currentTime = 0;
+                    audioRef.current.play();
+                }
                 const findCurrentData = currentData.find(item => item?.barcode?.toString()?.split(",")?.map((code: string) => code.trim())?.includes(result))
                 if (findCurrentData) {
                     setCurrentProduct(findCurrentData)
                     setOpenDialog(true)
                     setOpenScannerModal(false)
+                    qrScannerStop()
                     return
                 }
 
                 const findProduct = tableData.find(excelProduct => excelProduct?.Barcode?.toString()?.split(",")?.map((code: string) => code.trim())?.includes(result))
                 if (findProduct) {
                     setQrResult(findProduct ? { barcode: findProduct.Barcode.toString(), name: findProduct.Nomi, quantity: +findProduct.Miqdori, shelfLife: new Date(findProduct.Muddati), manufacturer: findProduct['Ishlab chiqaruvchi'], buyPrice: findProduct['Tan narxi'] } : { ...defaultBarcodeData, barcode: result })
+                    qrScannerStop()
                     return;
                 }
 
@@ -79,6 +87,7 @@ function BarcodeScanner() {
                         title: "Qutiga tashlang!",
                         variant: 'destructive'
                     })
+                    qrScannerStop()
                     return;
                 }
 
@@ -155,6 +164,7 @@ function BarcodeScanner() {
         <>
             {/* {!qrResult.barcode && (
                 <Lottie animationData={Scanner} loop /> */}
+            <audio ref={audioRef} src="/scanner-beep.mp3" preload="auto" hidden />
             <div id='qrCodeContainer' className={cn(qrResult.barcode ? 'hidden' : '')} />
             {/* )} */}
             {qrResult.barcode && <BarcodeDataForm defaultBarcodeData={{ ...qrResult, id: "" }} />}
