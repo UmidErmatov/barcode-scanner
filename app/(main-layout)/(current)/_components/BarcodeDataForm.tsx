@@ -26,30 +26,14 @@ type Props = {
 
 function BarcodeDataForm({ defaultBarcodeData }: Props) {
 
-    const [openDialog, setQrResult, setOpenDialog, setOpenScannerModal] = useCommonStore(state => [state.openDialog, state.setQrResult, state.setOpenDialog, state.setOpenScannerModal])
+    const [openDialog, setOpenDialog, setOpenScannerModal] = useCommonStore(state => [state.openDialog, state.setOpenDialog, state.setOpenScannerModal])
     const [isPending, startTransition] = useTransition()
     const [error, setError] = useState<any>("")
     const [success, setSuccess] = useState<any>("")
-    const [viewportHeight, setViewportHeight] = useState(window.visualViewport?.height);
     const form = useForm<z.infer<typeof BarcodeSchema>>({
         resolver: zodResolver(BarcodeSchema),
         defaultValues: { ...defaultBarcodeData, quantity: defaultBarcodeData.quantity ? defaultBarcodeData.quantity : undefined, peace: defaultBarcodeData.peace ? defaultBarcodeData.peace : 0 }
     });
-
-
-    useEffect(() => {
-        function updateViewportHeight() {
-            console.log("window.visualViewport: ", window.visualViewport);
-
-            setViewportHeight(window.visualViewport?.height || 0);
-        }
-
-        window.visualViewport?.addEventListener('resize', updateViewportHeight);
-        return () => {
-            window.visualViewport?.removeEventListener('resize', updateViewportHeight)
-            form.reset()
-        }
-    }, []);
 
     const onSubmit = (values: z.infer<typeof BarcodeSchema>) => {
         setError("")
@@ -58,6 +42,7 @@ function BarcodeDataForm({ defaultBarcodeData }: Props) {
             startTransition(() => {
                 updateScannedDataAction(values, defaultBarcodeData.id)
                     .then((data) => {
+                        // setQrResult(defaultBarcodeData)
                         setOpenDialog(false)
                         form.reset()
                     }).catch((error) => setError("Xatolik ro'y berdi!"));
@@ -66,6 +51,7 @@ function BarcodeDataForm({ defaultBarcodeData }: Props) {
             startTransition(() => {
                 createScannedDataAction(values)
                     .then((data) => {
+                        // setQrResult(defaultBarcodeData)
                         setOpenScannerModal(false)
                         form.reset()
                     }).catch((error) => setError("Xatolik ro'y berdi!"));
@@ -79,7 +65,7 @@ function BarcodeDataForm({ defaultBarcodeData }: Props) {
                 onSubmit={form.handleSubmit(onSubmit)}
                 className='space-y-6'
             >
-                <ScrollArea style={{ height: `${window.innerHeight > (viewportHeight || 0) ? 20 : 100}%` }}>
+                <ScrollArea>
                     <div className='space-y-4'>
 
                         <FormField

@@ -49,9 +49,8 @@ function BarcodeScanner() {
         }
 
         const qrCodeSuccess = (result: string) => {
-
-            if (!qrResult.barcode) {
-
+            // console.log("result: ", result, qrResult);
+            if (result) {
                 if (audioRef.current) {
                     audioRef.current.currentTime = 0;
                     audioRef.current.play();
@@ -154,9 +153,10 @@ function BarcodeScanner() {
         <>
             {/* {!qrResult.barcode && (
                 <Lottie animationData={Scanner} loop /> */}
+
             <audio ref={audioRef} src="/scanner-beep.mp3" preload="auto" hidden />
             <div id='qrCodeContainer' className={cn(qrResult.barcode ? 'hidden' : '')} />
-            {/* )} */}
+
             {qrResult.barcode && <BarcodeDataForm defaultBarcodeData={{ ...qrResult, id: "" }} />}
         </>
     )
