@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client"
-import { useCommonStore } from '@/store/common';
+import { defaultBarcodeData, useCommonStore } from '@/store/common';
 import { Html5Qrcode, Html5QrcodeCameraScanConfig } from 'html5-qrcode';
 import { useEffect, useRef, useState } from 'react';
 import './codeScannerStyle.css'
@@ -16,18 +16,8 @@ function BarcodeScanner() {
     const { toast } = useToast()
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
-    const defaultBarcodeData: DefaultBarcodeData = {
-        barcode: "",
-        name: "",
-        quantity: 0,
-        peace: 0,
-        shelfLife: new Date(),
-        manufacturer: "",
-        buyPrice: 0,
-    }
-
-    const [qrResult, setQrResult] = useState<DefaultBarcodeData>(defaultBarcodeData)
-    const [openScannerModal, setOpenScannerModal, setScanModalHeader, setOpenDialog, setCurrentProduct] = useCommonStore(state => [state.openScannerModal, state.setOpenScannerModal, state.setScanModalHeader, state.setOpenDialog, state.setCurrentProduct])
+    // const [qrResult, setQrResult] = useState<DefaultBarcodeData>(defaultBarcodeData)
+    const [openScannerModal, qrResult, setQrResult, setOpenScannerModal, setScanModalHeader, setOpenDialog, setCurrentProduct] = useCommonStore(state => [state.openScannerModal, state.qrResult, state.setQrResult, state.setOpenScannerModal, state.setScanModalHeader, state.setOpenDialog, state.setCurrentProduct])
     const [excelData, currentData] = useTableContext(state => [state.excelData, state.currentData])
 
     const tableData = excelData && excelData.excelData && typeof excelData.excelData === 'object' &&
@@ -77,7 +67,7 @@ function BarcodeScanner() {
 
                 const findProduct = tableData.find(excelProduct => excelProduct?.Barcode?.toString()?.split(",")?.map((code: string) => code.trim())?.includes(result))
                 if (findProduct) {
-                    setQrResult(findProduct ? { barcode: findProduct.Barcode.toString(), name: findProduct.Nomi, quantity: +findProduct.Miqdori, shelfLife: new Date(findProduct.Muddati), manufacturer: findProduct['Ishlab chiqaruvchi'], buyPrice: findProduct['Tan narxi'] } : { ...defaultBarcodeData, barcode: result })
+                    setQrResult(findProduct ? { barcode: findProduct.Barcode.toString(), name: findProduct.Nomi, quantity: +findProduct.Miqdori, shelfLife: new Date(findProduct.Muddati), manufacturer: findProduct['Ishlab chiqaruvchi'], buyPrice: findProduct['Tan narxi'], peace: findProduct.Dona || 0 } : { ...defaultBarcodeData, barcode: result })
                     qrScannerStop()
                     return;
                 }
@@ -93,7 +83,7 @@ function BarcodeScanner() {
 
                 qrScannerStop()
                 setScanModalHeader("Ma'lumotlar")
-                setQrResult(findProduct ? { barcode: findProduct.Barcode.toString(), name: findProduct.Nomi, quantity: +findProduct.Miqdori, shelfLife: new Date(findProduct.Muddati), manufacturer: findProduct['Ishlab chiqaruvchi'], buyPrice: findProduct['Tan narxi'] } : { ...defaultBarcodeData, barcode: result })
+                setQrResult(findProduct ? { barcode: findProduct.Barcode.toString(), name: findProduct.Nomi, quantity: +findProduct.Miqdori, shelfLife: new Date(findProduct.Muddati), manufacturer: findProduct['Ishlab chiqaruvchi'], buyPrice: findProduct['Tan narxi'], peace: findProduct.Dona || 0 } : { ...defaultBarcodeData, barcode: result })
             }
         }
 
@@ -125,7 +115,7 @@ function BarcodeScanner() {
 
                     const findProduct = tableData.find(excelProduct => excelProduct?.Barcode?.toString()?.split(",")?.map((code: string) => code.trim())?.includes(barcode))
                     if (findProduct) {
-                        setQrResult(findProduct ? { barcode: findProduct.Barcode.toString(), name: findProduct.Nomi, quantity: +findProduct.Miqdori, shelfLife: new Date(findProduct.Muddati), manufacturer: findProduct['Ishlab chiqaruvchi'], buyPrice: findProduct['Tan narxi'] } : { ...defaultBarcodeData, barcode: barcode })
+                        setQrResult(findProduct ? { barcode: findProduct.Barcode.toString(), name: findProduct.Nomi, quantity: +findProduct.Miqdori, shelfLife: new Date(findProduct.Muddati), manufacturer: findProduct['Ishlab chiqaruvchi'], buyPrice: findProduct['Tan narxi'], peace: findProduct.Dona || 0 } : { ...defaultBarcodeData, barcode: barcode })
                         window.removeEventListener('keydown', handleKeyPress);
                         barcode = ''
                         return;

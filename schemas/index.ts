@@ -48,10 +48,10 @@ export const BarcodeSchema = z.object({
     }).min(1, {
         message: "Miqdorni kiritish majburiy!"
     }),
-    peace: z.optional(z.number({
+    peace: z.number({
         required_error: "Raqam kiritng",
         invalid_type_error: "Raqam kiritng"
-    })),
+    }).nullable(),
     shelfLife: z.date({
         required_error: "Muddatni kiriting.",
     }),
@@ -65,6 +65,7 @@ export const BarcodeSchema = z.object({
         message: "Tan narxini kiritish majburiy!"
     }),
 })
+
 export const UpdateBarcodeSchema = z.object({
     id: z.string().min(1, { message: "ID ni belgilang!" }),
     barcode: z.string().min(1, { message: "Barcode kiritish majburiy!" }),
@@ -77,6 +78,10 @@ export const UpdateBarcodeSchema = z.object({
     }).min(1, {
         message: "Miqdorni kiritish majburiy!"
     }),
+    peace: z.number({
+        required_error: "Raqam kiritng",
+        invalid_type_error: "Raqam kiritng"
+    }).nullable(),
     shelfLife: z.date({
         required_error: "Muddatni kiriting.",
     }),

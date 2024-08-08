@@ -28,9 +28,9 @@ function InitialTable({ }: Props) {
                     <TabsTrigger value="source">Manba</TabsTrigger>
                     <TabsTrigger value="current">Joriy</TabsTrigger>
                 </TabsList>
-                <div className="ml-auto flex items-center gap-2">
+                {/* <div className="ml-auto flex items-center gap-2">
                     <ScanModal />
-                </div>
+                </div> */}
             </div>
             <TabsContent value="source">
                 <SourceTable excelData={excelData} employees={employees} />

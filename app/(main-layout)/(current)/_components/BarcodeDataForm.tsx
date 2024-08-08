@@ -26,14 +26,14 @@ type Props = {
 
 function BarcodeDataForm({ defaultBarcodeData }: Props) {
 
-    const [openDialog, setOpenDialog, setOpenScannerModal] = useCommonStore(state => [state.openDialog, state.setOpenDialog, state.setOpenScannerModal])
+    const [openDialog, setQrResult, setOpenDialog, setOpenScannerModal] = useCommonStore(state => [state.openDialog, state.setQrResult, state.setOpenDialog, state.setOpenScannerModal])
     const [isPending, startTransition] = useTransition()
     const [error, setError] = useState<any>("")
     const [success, setSuccess] = useState<any>("")
     const [viewportHeight, setViewportHeight] = useState(window.visualViewport?.height);
     const form = useForm<z.infer<typeof BarcodeSchema>>({
         resolver: zodResolver(BarcodeSchema),
-        defaultValues: { ...defaultBarcodeData, quantity: defaultBarcodeData.quantity ? defaultBarcodeData.quantity : undefined }
+        defaultValues: { ...defaultBarcodeData, quantity: defaultBarcodeData.quantity ? defaultBarcodeData.quantity : undefined, peace: defaultBarcodeData.peace ? defaultBarcodeData.peace : 0 }
     });
 
 
@@ -52,7 +52,6 @@ function BarcodeDataForm({ defaultBarcodeData }: Props) {
     }, []);
 
     const onSubmit = (values: z.infer<typeof BarcodeSchema>) => {
-
         setError("")
         setSuccess("")
         if (openDialog) {
@@ -60,6 +59,7 @@ function BarcodeDataForm({ defaultBarcodeData }: Props) {
                 updateScannedDataAction(values, defaultBarcodeData.id)
                     .then((data) => {
                         setOpenDialog(false)
+                        // setQrResult(defaultBarcodeData)
                         form.reset()
                     }).catch((error) => setError("Xatolik ro'y berdi!"));
             })
@@ -68,8 +68,9 @@ function BarcodeDataForm({ defaultBarcodeData }: Props) {
                 createScannedDataAction(values)
                     .then((data) => {
                         // setCurrentData([...currentData, values])
-                        setOpenScannerModal(false)
+                        // setQrResult(defaultBarcodeData)
                         form.reset()
+                        // setOpenScannerModal(true)
                     }).catch((error) => setError("Xatolik ro'y berdi!"));
             })
         }
@@ -152,6 +153,7 @@ function BarcodeDataForm({ defaultBarcodeData }: Props) {
                                             {...field}
                                             placeholder='0'
                                             type='number'
+                                            value={field.value ?? ""}
                                             disabled={isPending}
                                             onChange={(e) => field.onChange(e.target.value ? e.target.valueAsNumber : e.target.value)}
                                         />
