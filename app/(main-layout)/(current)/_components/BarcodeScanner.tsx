@@ -76,7 +76,7 @@ function BarcodeScanner() {
                         title: "Qutiga tashlang!",
                         variant: 'destructive'
                     })
-                    qrScannerStop()
+                    // qrScannerStop()
                     return;
                 }
 
