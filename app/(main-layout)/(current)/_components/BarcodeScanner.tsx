@@ -68,10 +68,10 @@ function BarcodeScanner() {
                 }
                 const findCurrentData = currentData.find(item => item?.barcode?.toString()?.split(",")?.map((code: string) => code.trim())?.includes(result))
                 if (findCurrentData) {
+                    qrScannerStop()
                     setCurrentProduct(findCurrentData)
                     setOpenDialog(true)
                     setOpenScannerModal(false)
-                    qrScannerStop()
                     return
                 }
 
