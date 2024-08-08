@@ -62,7 +62,7 @@ export default async function MainPage() {
                 <div className="flex-grow overflow-auto">
                     <InitialTable />
                 </div>
-                <div className="flex-shrink-0 sm:hidden">
+                <div className="flex-shrink-0 lg:hidden">
                     <ScanModal />
                 </div>
             </div>

@@ -59,7 +59,6 @@ function BarcodeDataForm({ defaultBarcodeData }: Props) {
                 updateScannedDataAction(values, defaultBarcodeData.id)
                     .then((data) => {
                         setOpenDialog(false)
-                        // setQrResult(defaultBarcodeData)
                         form.reset()
                     }).catch((error) => setError("Xatolik ro'y berdi!"));
             })
@@ -67,10 +66,8 @@ function BarcodeDataForm({ defaultBarcodeData }: Props) {
             startTransition(() => {
                 createScannedDataAction(values)
                     .then((data) => {
-                        // setCurrentData([...currentData, values])
-                        // setQrResult(defaultBarcodeData)
+                        setOpenScannerModal(false)
                         form.reset()
-                        // setOpenScannerModal(true)
                     }).catch((error) => setError("Xatolik ro'y berdi!"));
             })
         }
