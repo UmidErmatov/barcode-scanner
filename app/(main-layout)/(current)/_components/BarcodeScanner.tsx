@@ -49,7 +49,6 @@ function BarcodeScanner() {
         }
 
         const qrCodeSuccess = (result: string) => {
-            // console.log("result: ", result, qrResult);
             if (result) {
                 if (audioRef.current) {
                     audioRef.current.currentTime = 0;
@@ -94,6 +93,7 @@ function BarcodeScanner() {
         }
 
         const handleKeyPress = (event: KeyboardEvent) => {
+
             if (openScannerModal && !qrResult.barcode) {
                 if (isNaN(+event.key) && event.key !== 'Backspace') {
                     event.preventDefault();
@@ -125,7 +125,7 @@ function BarcodeScanner() {
                             title: "Qutiga tashlang!",
                             variant: 'destructive'
                         })
-                        window.removeEventListener('keydown', handleKeyPress);
+                        // window.removeEventListener('keydown', handleKeyPress);
                         barcode = ''
                         return;
                     }
@@ -145,6 +145,7 @@ function BarcodeScanner() {
         return () => {
             window.removeEventListener('keydown', handleKeyPress);
             qrScannerStop()
+            setQrResult(defaultBarcodeData)
             barcode = ''
         };
     }, [openScannerModal]);
